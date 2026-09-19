@@ -1,0 +1,45 @@
+/* 프로토타입 공용 스타일 — 빌드 없음. 화면 파일에서 <link>로 불러 쓴다. */
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b7280;
+  --line: #e5e7eb; --accent: #2563eb; --soft: #f7f8fa;
+  --sales: #b45309; --solution: #1d4ed8; --maint: #047857;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161a; --fg: #e8eaed; --muted: #9aa3af;
+    --line: #2b2f36; --accent: #6ea8fe; --soft: #1b1e24;
+    --sales: #f0b357; --solution: #8ab4ff; --maint: #6ee7b7;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161a; --fg: #e8eaed; --muted: #9aa3af;
+  --line: #2b2f36; --accent: #6ea8fe; --soft: #1b1e24;
+  --sales: #f0b357; --solution: #8ab4ff; --maint: #6ee7b7;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.6 "Malgun Gothic", "맑은 고딕", -apple-system, system-ui, sans-serif;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; }
+header.top { border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-bottom: 16px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 32px 0 8px; }
+p.lead { color: var(--muted); margin: 0; }
+a { color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; margin: 8px 0 4px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--soft); font-weight: 600; font-size: 13px; color: var(--muted); }
+
+.note { background: var(--soft); border: 1px solid var(--line); border-radius: 8px;
+        padding: 12px 14px; color: var(--muted); font-size: 14px; }
+.empty { color: var(--muted); font-style: italic; padding: 24px 0; }
+
+.tag { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px;
+       border: 1px solid currentColor; }
+.tag.sales { color: var(--sales); }
+.tag.solution { color: var(--solution); }
+.tag.maint { color: var(--maint); }
