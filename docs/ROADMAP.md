@@ -42,10 +42,15 @@ v3는 MCP가 제품이었고, 그래서 PMS가 MCP 모양으로 휘었다(호스
 
 ## 보류 중인 결정 (선제 결정 금지)
 
-- **기술 스택** — 프로토타입으로 뼈대가 확인된 뒤에 정한다. v3는 Java 25 / Spring
-  Boot 4.1 / Modulith / PostgreSQL / React·Vite·TS. 승계할지는 그때 판단한다.
+- ~~**기술 스택**~~ — **2026-09-19 확정**: Java · Spring Boot · Modulith · JPA ·
+  PostgreSQL · Gradle · React/Vite/TS (v3 승계). 세부 버전은 앱을 세우는 사이클에서 고정.
+- **모듈 구성** — 아직 정하지 않는다. 뼈대(B5)가 선 뒤에 적는다. v3의 모듈 목록
+  (person·auth·project·resource·notification·audit)은 참조이지 계획이 아니다 —
+  v4는 세 영역 + 공통 project 테이블로 자르므로 절단면이 다르다.
 - **v3 자산 재사용 범위** — `reference/seed/`(인원 44 · 프로젝트 382 · 유지보수
   계약 105)는 프로토타입 표본으로 참조 가치가 크다. 코드 이식은 별도 판단.
+- **CI** — 아직 없다. `git-workflow.md` 머지 조건은 verify + reviewer + 사람의 눈
+  3종이고, CI가 생기면 그 문서의 §2를 같은 사이클에서 고친다.
 
 ## 하네스 증설 후보 (고통이 실제로 생길 때만)
 

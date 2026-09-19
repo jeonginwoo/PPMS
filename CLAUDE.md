@@ -33,6 +33,17 @@ Read `docs/PROGRESS.md` first — current state, decision log, next task.
    excluded). Over budget means the unit was cut too big — split it and say so.
    Never ask for permission to exceed it.
 
+## Tech stack (confirmed 2026-09-19)
+
+Java · Spring Boot · Spring Modulith · JPA · PostgreSQL · Gradle · React/Vite/TS —
+carried over from v3, whose conventions were paid for in production. Exact versions
+are pinned by the cycle that scaffolds the app, not here.
+
+**Conventions are rules, not suggestions.** Read the one covering the file you are
+about to touch, and the `reviewer` agent judges against them:
+`docs/conventions/java-spring.md` · `docs/conventions/react-ts.md` ·
+`docs/conventions/git-workflow.md`.
+
 ## Commands
 
 ```bash
@@ -56,11 +67,17 @@ bash scripts/proto-snapshot.sh <label>  # freeze prototype/ into prototype/snaps
 6. MCP / AI chat is a **feature unit** (ROADMAP F9), never an architectural premise.
    No host app, no tool catalog, no MCP-shaped API or module boundary is built or
    reserved before that unit's own cycle. One track — v4 has no per-role commands.
+   v3's MCP rules are parked in the conventions' 부록: F9's cycle revives them by
+   moving them into the body. Reading them earlier is fine; applying them is not.
+7. A module is created by the cycle that first needs it — never scaffolded ahead of
+   its logic. v4's module list is written down only after the backbone (B5) stands.
 
 ## Way of working
 
-- Cycle control: `/next` (restore → plan → wait for approval) → `/proto` or `/spec`
-  or implement → `bash scripts/verify.sh` → `/wrap-up` (record → commit).
+- Cycle control: `/next` (sync → restore → plan → wait for approval) → `/proto` or
+  `/spec` or implement → `bash scripts/verify.sh` → `/wrap-up` (record → commit → PR).
+- Git: GitHub Flow — `docs/conventions/git-workflow.md`. **Never do code work on
+  `main`**: check the branch at session start and branch first if you are on it.
 - Never claim a task done unless `bash scripts/verify.sh` passes.
 - Decisions that change or contradict a document go to the PROGRESS decision log,
   always with 근거, and the contradicted document is fixed in the same cycle.

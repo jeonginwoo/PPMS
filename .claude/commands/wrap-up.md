@@ -13,5 +13,10 @@ End the current cycle.
    - any new decisions → 결정 기록, always with 근거
 4. Update this unit's row in `docs/ROADMAP.md` (프로토 / 스펙 / 구현 columns).
 5. If `CLAUDE.md` or `docs/BACKBONE.md` drifted from reality this cycle, fix it now.
-6. Commit. One cycle step = one commit, message format
-   `<nn-slug>(프로토|스펙|구현): summary`.
+6. Commit on the work branch — one cycle step = one commit, message format
+   `<nn-slug>(프로토|스펙|구현): summary`. Then open the PR with the description
+   `docs/conventions/git-workflow.md` §3 lists (verify output including the diff
+   budget line, reviewer verdict, snapshot path or spec path).
+   Docs-only and harness-only changes (`docs:` / `chore:`) may go straight to `main`.
+7. After merging, confirm `main` actually has it: `git log --oneline main` and look
+   for the subject. A PR marked merged is not evidence (git-workflow §2).

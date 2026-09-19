@@ -1,4 +1,5 @@
 {
+  "model": "claude-opus-5",
   "permissions": {
     "allow": [
       "Bash(bash scripts/*)",
@@ -28,7 +29,10 @@
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "bash scripts/hooks/stop-verify.sh" }
+          {
+            "type": "command",
+            "command": "bash scripts/hooks/stop-verify.sh"
+          }
         ]
       }
     ]
