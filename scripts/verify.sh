@@ -155,29 +155,43 @@ check_script_eol() {
 }
 
 check_snapshots_frozen() {
-  # prototype/snapshots/ is append-only: a committed snapshot file never changes.
+  # prototype/snapshots/ is append-only, which means two different things here:
+  #   - a frozen snapshot's own files never change at all;
+  #   - INDEX.md is a ledger: rows may be added and their annotation column filled
+  #     in later, but a row is never deleted.
+  # Counting removed *lines* was too strict — it blocked both the snapshot script's
+  # own row and any later correction of the "확정된 것" column (both measured).
   git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
-  local changed
-  changed=$(git diff HEAD --name-only -- prototype/snapshots 2>/dev/null)
+  local bad=0 changed idx before after
+  changed=$(git diff HEAD --name-only -- prototype/snapshots ':(exclude)prototype/snapshots/INDEX.md' 2>/dev/null)
   if [ -n "$changed" ]; then
-    echo "snapshots are append-only, but these were modified or deleted:"
+    echo "a frozen snapshot was modified or deleted:"
     echo "$changed"
-    return 1
+    bad=1
   fi
-  echo "no committed snapshot was touched"
-  return 0
+  idx=prototype/snapshots/INDEX.md
+  if [ -f "$idx" ] && git cat-file -e "HEAD:$idx" 2>/dev/null; then
+    before=$(git show "HEAD:$idx" | grep -c '^| [0-9]')
+    after=$(grep -c '^| [0-9]' "$idx")
+    if [ "$after" -lt "$before" ]; then
+      echo "INDEX.md lost rows: $before -> $after (the ledger is append-only)"
+      bad=1
+    fi
+  fi
+  [ $bad -eq 0 ] && echo "snapshots intact; INDEX.md ledger not shrunk"
+  return $bad
 }
 
 check_diff_budget() {
   git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
-  local ex=(':(exclude)docs' ':(exclude)prototype/snapshots' ':(exclude)build')
+  local ex=(':(exclude)docs' ':(exclude)prototype' ':(exclude)build')
   local tracked untracked n
   tracked=$(git diff --numstat HEAD -- . "${ex[@]}" 2>/dev/null \
             | awk '{a+=$1; d+=$2} END {print a+d+0}')
   untracked=$(git ls-files --others --exclude-standard -- . "${ex[@]}" 2>/dev/null \
               | tr '\n' '\0' | xargs -0 -r cat 2>/dev/null | wc -l)
   n=$(( tracked + untracked ))
-  echo "changed lines this cycle (docs/ and snapshots excluded): $n / $BUDGET"
+  echo "changed lines this cycle (product code only; docs/ and prototype/ excluded): $n / $BUDGET"
   [ "$n" -le "$BUDGET" ]
 }
 
