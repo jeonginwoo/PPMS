@@ -182,17 +182,27 @@ check_snapshots_frozen() {
   return $bad
 }
 
-check_diff_budget() {
-  git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
-  local ex=(':(exclude)docs' ':(exclude)prototype' ':(exclude)build')
-  local tracked untracked n
-  tracked=$(git diff --numstat HEAD -- . "${ex[@]}" 2>/dev/null \
-            | awk '{a+=$1; d+=$2} END {print a+d+0}')
-  untracked=$(git ls-files --others --exclude-standard -- . "${ex[@]}" 2>/dev/null \
+changed_lines() {
+  # tracked edits + whole untracked files, for the given pathspecs
+  local tracked untracked
+  tracked=$(git diff --numstat HEAD -- "$@" 2>/dev/null | awk '{a+=$1; d+=$2} END {print a+d+0}')
+  untracked=$(git ls-files --others --exclude-standard -- "$@" 2>/dev/null \
               | tr '\n' '\0' | xargs -0 -r cat 2>/dev/null | wc -l)
-  n=$(( tracked + untracked ))
-  echo "changed lines this cycle (product code only; docs/ and prototype/ excluded): $n / $BUDGET"
-  [ "$n" -le "$BUDGET" ]
+  echo $(( tracked + untracked ))
+}
+
+check_diff_budget() {
+  # The budget caps PRODUCT CODE — what a human has to review and then live with.
+  # prototype/ is exempt because it is throwaway, but it is still REPORTED: the
+  # number is the cycle-width signal, and excluding it silently would delete the
+  # very thing the budget exists to make visible (review finding, 2026-09-19).
+  git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
+  local code proto
+  code=$(changed_lines . ':(exclude)docs' ':(exclude)prototype' ':(exclude)build')
+  proto=$(changed_lines prototype ':(exclude)prototype/snapshots')
+  echo "product code : $code / $BUDGET"
+  echo "prototype    : $proto (budget-exempt, but this is the cycle-width signal — read it)"
+  [ "$code" -le "$BUDGET" ]
 }
 
 # --- run ----------------------------------------------------------------------

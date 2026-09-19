@@ -17,8 +17,11 @@ Build the planning prototype for the current unit.
 3. Fake data is expected. Never build a backend, an API, or a database for a
    prototype. Realistic sample rows may be lifted from
    `C:\Projects\pms_mcp_v3\reference\seed\` — reference only, never imported.
-4. Prototype **only what this unit needs**. Screens for other units do not belong
-   in this cycle even when they look obvious.
+4. Prototype **only what the declared unit needs**. Screens for other units do not
+   belong in this cycle even when they look obvious. The one exception is a unit the
+   ROADMAP declares as cross-cutting (B0 is the worked example) — and that breadth is
+   agreed **before** the cycle starts, in its own `chore:` commit, never claimed
+   afterwards by pointing at what was already built.
 5. Run `bash scripts/verify.sh --quick` — broken links fail it.
 6. Hand it to the user: say what to look at, and list the open questions this
    prototype is meant to settle (`docs/BACKBONE.md` §4, or the unit's own).
