@@ -1,0 +1,198 @@
+/* 인터뷰 오버레이 — 프로토타입 화면 위에 핫스팟을 얹고, 오른쪽에 질문 패널을 붙인다.
+   프로토타입의 base.css 변수를 그대로 쓴다(테마가 같이 따라간다). */
+
+:root {
+  --iv: #7c3aed;
+  --iv-soft: rgba(124, 58, 237, .10);
+  --iv-line: rgba(124, 58, 237, .45);
+  --iv-key: #0f766e;
+  --iv-warn: #c2410c;
+  --iv-done: #15803d;
+  --iv-panel-w: 380px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --iv: #a78bfa;
+    --iv-soft: rgba(167, 139, 250, .14);
+    --iv-line: rgba(167, 139, 250, .55);
+    --iv-key: #5eead4;
+    --iv-warn: #fdba74;
+    --iv-done: #86efac;
+  }
+}
+
+/* ── 핫스팟 ───────────────────────────────────────────── */
+.iv-hot {
+  position: relative;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .15s, box-shadow .15s;
+}
+body.iv-on .iv-hot {
+  box-shadow: inset 0 0 0 1.5px var(--iv-line);
+  background: var(--iv-soft);
+}
+body.iv-on .iv-hot:hover {
+  box-shadow: inset 0 0 0 2px var(--iv), 0 0 0 4px var(--iv-soft);
+  background: var(--iv-soft);
+}
+body.iv-on .iv-hot.iv-active {
+  box-shadow: inset 0 0 0 2px var(--iv), 0 0 0 5px var(--iv-soft);
+  background: var(--iv-soft);
+}
+
+/* 질문 개수 뱃지 */
+body.iv-on .iv-hot::after {
+  content: attr(data-iv-n);
+  position: absolute;
+  top: -8px; right: -8px;
+  min-width: 17px; height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--iv); color: #fff;
+  font: 700 10px/17px -apple-system, "Segoe UI", system-ui, sans-serif;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  pointer-events: none;
+  z-index: 3;
+}
+body.iv-on .iv-hot.iv-answered::after { background: var(--iv-done); }
+
+/* 답한 질문이 있는 핫스팟 */
+body.iv-on .iv-hot.iv-answered { box-shadow: inset 0 0 0 1.5px var(--iv-done); }
+
+/* "어디 있지?" — 전체를 잠깐 반짝이게 */
+@keyframes ivFlash {
+  0%, 100% { box-shadow: inset 0 0 0 1.5px var(--iv-line); }
+  50%      { box-shadow: inset 0 0 0 3px var(--iv), 0 0 0 7px var(--iv-soft); }
+}
+body.iv-on.iv-flash .iv-hot { animation: ivFlash .6s ease-in-out 3; }
+
+/* 표 헤더 셀은 겹침이 잦아 여백을 조금 준다 */
+body.iv-on th.iv-hot { padding-right: 14px; }
+
+/* ── 상단 툴바 ───────────────────────────────────────── */
+#iv-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 40px; z-index: 60;
+  display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  background: var(--panel); border-bottom: 1px solid var(--line);
+  font: 13px/1 -apple-system, "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+  color: var(--fg);
+}
+body.iv-ready { padding-top: 40px; }
+body.iv-ready .shell { min-height: calc(100vh - 40px); }
+
+#iv-top .iv-title { font-weight: 700; white-space: nowrap; }
+#iv-top .iv-title span { color: var(--muted); font-weight: 400; margin-left: 6px; }
+#iv-top .grow { flex: 1; }
+
+.iv-btn {
+  background: var(--panel); color: var(--fg);
+  border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 10px; font: inherit; cursor: pointer; white-space: nowrap;
+}
+.iv-btn:hover { border-color: var(--iv); color: var(--iv); }
+.iv-btn.on { background: var(--iv); border-color: var(--iv); color: #fff; }
+.iv-btn.on:hover { color: #fff; filter: brightness(1.1); }
+
+.iv-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.iv-seg button {
+  background: var(--panel); color: var(--muted); border: 0;
+  border-right: 1px solid var(--line); padding: 5px 9px; font: inherit; cursor: pointer;
+}
+.iv-seg button:last-child { border-right: 0; }
+.iv-seg button[aria-pressed="true"] { background: var(--iv); color: #fff; font-weight: 600; }
+
+#iv-timer {
+  font-variant-numeric: tabular-nums; font-weight: 700;
+  padding: 4px 8px; border-radius: 6px; border: 1px solid var(--line);
+}
+#iv-timer.over { border-color: var(--iv-warn); color: var(--iv-warn); }
+
+#iv-sess { max-width: 140px; }
+select.iv-sel, input.iv-in {
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 7px; font: inherit;
+}
+
+/* ── 우측 패널 ───────────────────────────────────────── */
+#iv-panel {
+  position: fixed; top: 40px; right: 0; bottom: 0; width: var(--iv-panel-w);
+  background: var(--panel); border-left: 1px solid var(--line);
+  display: flex; flex-direction: column; z-index: 55;
+  font: 13px/1.6 -apple-system, "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+}
+body.iv-panel-open.iv-ready .shell { margin-right: var(--iv-panel-w); }
+body:not(.iv-panel-open) #iv-panel { display: none; }
+
+#iv-panel .head {
+  padding: 10px 12px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 8px;
+}
+#iv-panel .head b { font-size: 13px; }
+#iv-panel .head .sub { color: var(--muted); font-size: 12px; }
+#iv-panel .body { flex: 1; overflow-y: auto; padding: 10px 12px 40px; }
+#iv-panel .foot { padding: 8px 12px; border-top: 1px solid var(--line); display: flex; gap: 6px; }
+
+.iv-empty { color: var(--muted); padding: 30px 6px; text-align: center; line-height: 1.8; }
+.iv-empty kbd {
+  display: inline-block; border: 1px solid var(--line); border-bottom-width: 2px;
+  border-radius: 4px; padding: 1px 5px; font: inherit; font-size: 11px;
+}
+
+.iv-q { border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-bottom: 8px; background: var(--bg); }
+.iv-q.done { border-color: var(--iv-done); }
+.iv-q .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 5px; align-items: center; }
+.iv-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: .02em;
+  padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted);
+}
+.iv-tag.id { color: var(--fg); }
+.iv-tag.t10 { background: var(--iv); border-color: var(--iv); color: #fff; }
+.iv-tag.key { background: var(--iv-key); border-color: var(--iv-key); color: #fff; }
+.iv-tag.warn { background: var(--iv-warn); border-color: var(--iv-warn); color: #fff; }
+.iv-q .qt { font-size: 14px; font-weight: 600; line-height: 1.5; }
+.iv-q .why {
+  margin-top: 6px; font-size: 12px; color: var(--muted);
+  border-left: 2px solid var(--line); padding-left: 8px;
+}
+.iv-q .why b { color: var(--fg); }
+.iv-q textarea {
+  width: 100%; margin-top: 7px; min-height: 38px; resize: vertical;
+  background: var(--panel); color: var(--fg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
+  font: inherit; line-height: 1.5; box-sizing: border-box;
+}
+.iv-q textarea:focus { outline: 2px solid var(--iv); outline-offset: 1px; }
+
+.iv-sec {
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--muted);
+  margin: 14px 0 6px; text-transform: uppercase;
+}
+.iv-sec:first-child { margin-top: 0; }
+
+/* ── 내보내기 모달 ───────────────────────────────────── */
+#iv-modal { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
+#iv-modal .box {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  width: min(720px, 100%); max-height: 84vh; display: flex; flex-direction: column;
+  font: 13px/1.6 -apple-system, "Segoe UI", system-ui, sans-serif; color: var(--fg);
+}
+#iv-modal h3 { margin: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--fg); }
+#iv-modal .in { padding: 12px 14px; overflow: auto; }
+#iv-modal textarea {
+  width: 100%; min-height: 320px; box-sizing: border-box;
+  background: var(--bg); color: var(--fg); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px; font: 12px/1.5 ui-monospace, Consolas, monospace;
+}
+#iv-modal .act { padding: 10px 14px; border-top: 1px solid var(--line); display: flex; gap: 6px; justify-content: flex-end; }
+
+/* ── 좁은 화면 ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+  :root { --iv-panel-w: 320px; }
+}
+@media (max-width: 860px) {
+  #iv-panel { width: 100%; }
+  body.iv-panel-open.iv-ready .shell { margin-right: 0; }
+  #iv-top .iv-hide-narrow { display: none; }
+}
