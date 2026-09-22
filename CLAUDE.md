@@ -24,14 +24,18 @@ Read `docs/PROGRESS.md` first — current state, decision log, next task.
 ```
 
 1. **One feature unit per cycle.** A unit is what fits in one reviewable diff.
+   (The prototype step may be wider — see 6. Nothing else may.)
 2. Planning starts as a **plain HTML prototype** in `prototype/`. Never write a
    spec before the user has reviewed the prototype for that unit.
 3. The spec is `docs/features/<NN-slug>.md` and stays **one page**. There is no
    global PRD in this repo — writing one is the mistake this repo exists to avoid.
 4. Implementation never starts without an approved spec file for that unit.
-5. **Diff budget: 400 lines per cycle** (`docs/` and `prototype/snapshots/`
-   excluded). Over budget means the unit was cut too big — split it and say so.
-   Never ask for permission to exceed it.
+5. **Diff budget: 400 lines per cycle**, counting product code only — `docs/`,
+   `prototype/` and `prototype/snapshots/` are excluded. Over budget means the unit
+   was cut too big; split it and say so. Never ask for permission to exceed it.
+6. A prototype may cover several units at once (see B0) — walking the whole transfer
+   pipeline is how it gets validated, and it is throwaway. **Specs and implementation
+   never do**: one unit per cycle, one page per spec. That is where v3 broke.
 
 ## Tech stack (confirmed 2026-09-19)
 

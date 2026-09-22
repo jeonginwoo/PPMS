@@ -155,30 +155,54 @@ check_script_eol() {
 }
 
 check_snapshots_frozen() {
-  # prototype/snapshots/ is append-only: a committed snapshot file never changes.
+  # prototype/snapshots/ is append-only, which means two different things here:
+  #   - a frozen snapshot's own files never change at all;
+  #   - INDEX.md is a ledger: rows may be added and their annotation column filled
+  #     in later, but a row is never deleted.
+  # Counting removed *lines* was too strict — it blocked both the snapshot script's
+  # own row and any later correction of the "확정된 것" column (both measured).
   git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
-  local changed
-  changed=$(git diff HEAD --name-only -- prototype/snapshots 2>/dev/null)
+  local bad=0 changed idx before after
+  changed=$(git diff HEAD --name-only -- prototype/snapshots ':(exclude)prototype/snapshots/INDEX.md' 2>/dev/null)
   if [ -n "$changed" ]; then
-    echo "snapshots are append-only, but these were modified or deleted:"
+    echo "a frozen snapshot was modified or deleted:"
     echo "$changed"
-    return 1
+    bad=1
   fi
-  echo "no committed snapshot was touched"
-  return 0
+  idx=prototype/snapshots/INDEX.md
+  if [ -f "$idx" ] && git cat-file -e "HEAD:$idx" 2>/dev/null; then
+    before=$(git show "HEAD:$idx" | grep -c '^| [0-9]')
+    after=$(grep -c '^| [0-9]' "$idx")
+    if [ "$after" -lt "$before" ]; then
+      echo "INDEX.md lost rows: $before -> $after (the ledger is append-only)"
+      bad=1
+    fi
+  fi
+  [ $bad -eq 0 ] && echo "snapshots intact; INDEX.md ledger not shrunk"
+  return $bad
+}
+
+changed_lines() {
+  # tracked edits + whole untracked files, for the given pathspecs
+  local tracked untracked
+  tracked=$(git diff --numstat HEAD -- "$@" 2>/dev/null | awk '{a+=$1; d+=$2} END {print a+d+0}')
+  untracked=$(git ls-files --others --exclude-standard -- "$@" 2>/dev/null \
+              | tr '\n' '\0' | xargs -0 -r cat 2>/dev/null | wc -l)
+  echo $(( tracked + untracked ))
 }
 
 check_diff_budget() {
+  # The budget caps PRODUCT CODE — what a human has to review and then live with.
+  # prototype/ is exempt because it is throwaway, but it is still REPORTED: the
+  # number is the cycle-width signal, and excluding it silently would delete the
+  # very thing the budget exists to make visible (review finding, 2026-09-19).
   git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
-  local ex=(':(exclude)docs' ':(exclude)prototype/snapshots' ':(exclude)build')
-  local tracked untracked n
-  tracked=$(git diff --numstat HEAD -- . "${ex[@]}" 2>/dev/null \
-            | awk '{a+=$1; d+=$2} END {print a+d+0}')
-  untracked=$(git ls-files --others --exclude-standard -- . "${ex[@]}" 2>/dev/null \
-              | tr '\n' '\0' | xargs -0 -r cat 2>/dev/null | wc -l)
-  n=$(( tracked + untracked ))
-  echo "changed lines this cycle (docs/ and snapshots excluded): $n / $BUDGET"
-  [ "$n" -le "$BUDGET" ]
+  local code proto
+  code=$(changed_lines . ':(exclude)docs' ':(exclude)prototype' ':(exclude)build')
+  proto=$(changed_lines prototype ':(exclude)prototype/snapshots')
+  echo "product code : $code / $BUDGET"
+  echo "prototype    : $proto (budget-exempt, but this is the cycle-width signal — read it)"
+  [ "$code" -le "$BUDGET" ]
 }
 
 # --- run ----------------------------------------------------------------------
