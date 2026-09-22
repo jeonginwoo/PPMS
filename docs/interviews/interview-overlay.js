@@ -21,7 +21,20 @@
     return { sessions: [blank('대상 1')], current: 0 };
   }
   function blank(name) {
-    return { name: name, who: 'all', date: new Date().toISOString().slice(0, 10), answers: {}, asked: {}, mins: 0 };
+    return { name: name, who: 'all', date: new Date().toISOString().slice(0, 10),
+             answers: {}, asked: {}, mins: 0, updatedAt: 0, exportedAt: 0 };
+  }
+  /* 내보낸 뒤에 고친 답변이 있는 세션 — 창을 닫기 전에 경고할 근거.
+     이 페이지는 file:// 이라 스스로 파일을 쓰지 못한다: 내보내기가 유일한 출구다. */
+  function unsaved() {
+    return store.sessions.filter(function (s) { return (s.updatedAt || 0) > (s.exportedAt || 0); });
+  }
+  function whoLabel(w) {
+    return { sales: '영업', solution: '솔루션', cs: 'CS', all: '공통' }[w] || '공통';
+  }
+  function fileName(s) {
+    var nm = (s.name || '대상').replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '');
+    return s.date + '-' + whoLabel(s.who) + '-' + nm + '.md';
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
   function cur() { return store.sessions[store.current] || store.sessions[0]; }
@@ -47,6 +60,10 @@
       '</span>' +
       '<span class="grow"></span>' +
       '<select class="iv-sel" id="iv-sess" title="인터뷰 대상"></select>' +
+      '<select class="iv-sel iv-hide-narrow" id="iv-who" title="담당 업무">' +
+        '<option value="all">공통</option><option value="sales">영업</option>' +
+        '<option value="solution">솔루션</option><option value="cs">CS</option>' +
+      '</select>' +
       '<button class="iv-btn" id="iv-new">＋</button>' +
       '<span id="iv-timer">00:00</span>' +
       '<button class="iv-btn" id="iv-timer-btn">시작</button>' +
@@ -77,7 +94,10 @@
       document.body.classList.toggle('iv-panel-open', view.panel);
     });
     document.getElementById('iv-sess').addEventListener('change', function () {
-      store.current = Number(this.value); save(); apply(); renderPanel();
+      store.current = Number(this.value); save(); renderSess(); apply(); renderPanel();
+    });
+    document.getElementById('iv-who').addEventListener('change', function () {
+      cur().who = this.value; save();
     });
     document.getElementById('iv-new').addEventListener('click', function () {
       var n = prompt('인터뷰 대상 이름 (또는 구분)', '대상 ' + (store.sessions.length + 1));
@@ -91,6 +111,7 @@
       if (timerId) {
         stopTimer();
         cur().mins = Math.round(elapsed / 60); save();
+        if (Q.some(function (q) { return answered(q.id); })) { exportMd(); }
       } else {
         this.textContent = '정지';
         timerId = setInterval(function () { elapsed += 1; tick(); }, 1000);
@@ -122,6 +143,8 @@
       sel.appendChild(o);
     });
     sel.value = store.current;
+    var w = document.getElementById('iv-who');
+    if (w) { w.value = cur().who || 'all'; }
   }
 
   /* ── 패널 ──────────────────────────────────────────── */
@@ -132,14 +155,20 @@
       '<div class="head"><div><b id="iv-p-title">질문</b><div class="sub" id="iv-p-sub"></div></div></div>' +
       '<div class="body" id="iv-p-body"></div>' +
       '<div class="foot">' +
-        '<button class="iv-btn" id="iv-all">이 화면 질문 전부</button>' +
-        '<button class="iv-btn" id="iv-rest">남은 10분 질문</button>' +
+        '<button class="iv-btn" id="iv-all">이 화면</button>' +
+        '<button class="iv-btn" id="iv-every">전체</button>' +
+        '<button class="iv-btn" id="iv-rest">남은 10분</button>' +
       '</div>';
     document.body.appendChild(p);
     document.body.classList.add('iv-panel-open');
 
     document.getElementById('iv-all').addEventListener('click', function () {
       view.sel = null; view.selLabel = '';
+      markActive(null); renderPanel();
+    });
+    document.getElementById('iv-every').addEventListener('click', function () {
+      view.sel = Q.map(function (q) { return q.id; });
+      view.selLabel = '전체 질문';
       markActive(null); renderPanel();
     });
     document.getElementById('iv-rest').addEventListener('click', function () {
@@ -205,9 +234,6 @@
 
     var tags = '<span class="iv-tag id">' + q.id + '</span>' +
                '<span class="iv-tag' + (q.tier === 10 ? ' t10' : '') + '">' + q.tier + '분</span>';
-    if (q.flag === 'key')   { tags += '<span class="iv-tag key">핵심</span>'; }
-    if (q.flag === 'warn')  { tags += '<span class="iv-tag warn">⚠ 번거로움 의심</span>'; }
-    if (q.flag === 'warn2') { tags += '<span class="iv-tag warn">⚠⚠ 뺄 1순위</span>'; }
 
     el.innerHTML = '<div class="tags">' + tags + '</div><div class="qt"></div>' +
       (q.why ? '<div class="why">' + q.why + '</div>' : '');
@@ -220,6 +246,7 @@
     ta.addEventListener('input', function () {
       s.answers[q.id] = ta.value;
       s.asked[q.id] = true;
+      s.updatedAt = Date.now();
       el.classList.toggle('done', !!ta.value.trim());
       grow(ta); save(); refreshBadges();
     });
@@ -307,6 +334,7 @@
   function toMarkdown() {
     var s = cur();
     var out = ['# 인터뷰 기록 — ' + s.name, '', '- 일시: ' + s.date,
+               '- 담당: ' + whoLabel(s.who),
                '- 소요: ' + fmt(elapsed || (s.mins || 0) * 60), ''];
     SECTIONS.forEach(function (sec) {
       var qs = Q.filter(function (q) { return q.s === sec.id && answered(q.id); });
@@ -332,7 +360,9 @@
     wrap.id = 'iv-modal';
     wrap.innerHTML =
       '<div class="box"><h3>결과 내보내기 — ' + esc(cur().name) + '</h3>' +
-      '<div class="in"><textarea id="iv-md"></textarea></div>' +
+      '<div class="in"><p class="iv-hint">내려받은 파일은 <code>docs/interviews/results/</code> 에 옮겨 둡니다. ' +
+      '이 페이지는 브라우저 안에만 기록을 들고 있어서, 내보내지 않으면 남지 않습니다.</p>' +
+      '<textarea id="iv-md"></textarea></div>' +
       '<div class="act">' +
         '<button class="iv-btn on" id="iv-copy">전체 복사</button>' +
         '<button class="iv-btn" id="iv-dl">.md 저장</button>' +
@@ -348,15 +378,18 @@
       var ok = false;
       try { ok = document.execCommand('copy'); } catch (e2) {}
       if (!ok && navigator.clipboard) { navigator.clipboard.writeText(ta.value); }
+      cur().exportedAt = Date.now(); save();
       this.textContent = '복사됨';
     });
     wrap.querySelector('#iv-dl').addEventListener('click', function () {
       var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'interview-' + cur().date + '-' + cur().name.replace(/[^\w가-힣-]/g, '') + '.md';
+      a.download = fileName(cur());
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      cur().exportedAt = Date.now(); save();
+      this.textContent = '저장됨';
     });
   }
 
@@ -379,6 +412,12 @@
     window.addEventListener('hashchange', function () {
       view.sel = null; view.selLabel = '';
       setTimeout(function () { apply(); renderPanel(); }, 40);
+    });
+
+    window.addEventListener('beforeunload', function (e) {
+      if (!unsaved().length) { return; }
+      e.preventDefault();
+      e.returnValue = '';   /* 문구는 브라우저가 정한다 */
     });
   }
 

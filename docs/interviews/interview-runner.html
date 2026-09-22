@@ -257,7 +257,16 @@ function save() {
   try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {}
 }
 function newSession(name) {
-  return { name: name, who: 'all', date: new Date().toISOString().slice(0, 10), answers: {}, asked: {}, mins: 0 };
+  return { name: name, who: 'all', date: new Date().toISOString().slice(0, 10),
+           answers: {}, asked: {}, mins: 0, updatedAt: 0, exportedAt: 0 };
+}
+/* 내보낸 뒤에 고친 답변이 있는 세션 — 창을 닫기 전에 경고할 근거 */
+function unsaved() {
+  return store.sessions.filter(function (s) { return (s.updatedAt || 0) > (s.exportedAt || 0); });
+}
+function fileName(s) {
+  var nm = (s.name || '대상').replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '');
+  return s.date + '-' + whoLabel(s.who) + '-' + nm + '.md';
 }
 function cur() { return store.sessions[store.current] || store.sessions[0]; }
 
@@ -322,9 +331,6 @@ function card(q, s) {
 
   var tags = '<span class="tag id">' + q.id + '</span>';
   tags += '<span class="tag' + (q.tier === 10 ? ' t10' : '') + '">' + q.tier + '분</span>';
-  if (q.flag === 'key')   { tags += '<span class="tag key">핵심</span>'; }
-  if (q.flag === 'warn')  { tags += '<span class="tag warn">⚠ 번거로움 의심</span>'; }
-  if (q.flag === 'warn2') { tags += '<span class="tag warn">⚠⚠ 뺄 1순위</span>'; }
 
   el.innerHTML =
     '<div class="q-head">' +
@@ -344,6 +350,7 @@ function card(q, s) {
   autoGrow(ta);
   ta.addEventListener('input', function () {
     s.answers[q.id] = ta.value;
+    s.updatedAt = Date.now();
     ta.className = ta.value ? 'filled' : '';
     autoGrow(ta);
     save();
@@ -500,7 +507,9 @@ document.getElementById('manageSess').addEventListener('click', function () {
 document.getElementById('exportBtn').addEventListener('click', function () {
   var md = toMarkdown();
   var bg = openModal('결과 내보내기 — ' + cur().name,
-    '<p class="hint">복사해서 기록 문서에 붙이거나, 파일로 내려받으세요.</p><textarea id="md"></textarea>',
+    '<p class="hint">내려받은 파일은 <code>docs/interviews/results/</code> 에 옮겨 둡니다. ' +
+    '이 페이지는 브라우저 안에만 기록을 들고 있어서, 내보내지 않으면 남지 않습니다.</p>' +
+    '<textarea id="md"></textarea>',
     [
       { label: '전체 복사', primary: true, on: function (m) {
           var ta = m.querySelector('#md');
@@ -508,15 +517,17 @@ document.getElementById('exportBtn').addEventListener('click', function () {
           var ok = false;
           try { ok = document.execCommand('copy'); } catch (e) {}
           if (!ok && navigator.clipboard) { navigator.clipboard.writeText(ta.value).then(function(){}); }
+          cur().exportedAt = Date.now(); save();
           this.textContent = '복사됨';
         } },
       { label: '.md 파일로 저장', on: function () {
           var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
           var a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
-          a.download = 'interview-' + cur().date + '-' + cur().name.replace(/[^\w가-힣-]/g, '') + '.md';
+          a.download = fileName(cur());
           a.click();
           setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+          cur().exportedAt = Date.now(); save();
         } }
     ]);
   bg.querySelector('#md').value = md;
@@ -548,6 +559,12 @@ function syncWho() {
     c.setAttribute('aria-pressed', c.dataset.who === view.who);
   });
 }
+
+window.addEventListener('beforeunload', function (e) {
+  if (!unsaved().length) { return; }
+  e.preventDefault();
+  e.returnValue = '';   /* 문구는 브라우저가 정한다 */
+});
 
 renderSessions();
 syncWho();
