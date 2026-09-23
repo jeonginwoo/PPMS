@@ -792,11 +792,6 @@
     var hs = DB.holidaysIn(w, DB.shiftDay(w, 4));
     return hs.length ? '<br>' + tag('warn', hs.map(function (x) { return x.name; }).join(' · ')) : '';
   }
-  function leaveIn(pid, from, to) {
-    return DB.leaves.filter(function (l) { return l.personId === pid && l.date >= from && l.date <= to; });
-  }
-  /* 차주 계획 — 파생이 아니다. 사람이 TODO 화면에서 쓴 그 주의 계획 글을 그대로 가져온다
-     (사용자 결정 2026-09-23). 여기서도 고칠 수 있게 버튼을 둔다 — 같은 칸이므로 어디서 고치든 같다. */
   function planCell(pid, ws) {
     var p = DB.planOf(pid, ws);
     return (p ? '<div class="ptext">' + esc(p.text).replace(/\n/g, '<br>') + '</div>'
@@ -812,15 +807,14 @@
       ', &quot;' + key + '&quot;)">비고 쓰기</button></div></td>';
   }
   /* 부서 · 성명을 한 칸으로 합친다(사용자 결정 2026-09-22) — 양식은 두 칸이지만 화면에서는
-     둘이 항상 같이 읽히고, 칸을 줄인 만큼 실적 칸이 넓어진다. */
+     둘이 항상 같이 읽히고, 칸을 줄인 만큼 실적 칸이 넓어진다.
+     휴가는 여기 붙이지 않는다(사용자 결정 2026-09-23) — 주간보고에는 휴가를 아예 두지 않고,
+     일간보고에서만 **할 일 칸**에 표시한다. */
   function whoCell(p, rows) {
-    var w0 = reportWeek || DB.weekStartOf(DB.today());
-    var lv = rows ? leaveIn(p.id, w0, DB.shiftDay(w0, 6)) : [];
     return '<td class="who"' + (rows ? ' rowspan="' + rows + '"' : '') + '>' +
       '<div class="org">' + esc(p.org) + '</div>' +
       esc(p.name) + ' <span class="tag off">' + esc(p.grade) + '</span>' +
-      (p.id === DB.ME ? ' <span class="tag solution">나</span>' : '') +
-      (lv.length ? '<div>' + tag('maint', lv[0].type + ' ' + lv.length + '일') + '</div>' : '') + '</td>';
+      (p.id === DB.ME ? ' <span class="tag solution">나</span>' : '') + '</td>';
   }
   /* 정렬: 부서 → 이름. 단 '나'는 정렬 밖이고 늘 맨 위다(사용자 결정 2026-09-22) —
      내 줄을 찾는 것이 이 화면에서 가장 자주 하는 일이다.
@@ -860,23 +854,27 @@
       '</div></div>';
 
     if (isDay) {
-      var wrote = 0, away = 0, body = '';
+      var wrote = 0, away = 0, silent = 0, body = '';
       var hol = DB.holidayOf(day);
       sortedPeople().forEach(function (p) {
         var ts = DB.todosOf(p.id, day);
         var lv = DB.leaveOf(p.id, day);
-        if (ts.length) { wrote++; } else if (lv) { away++; }
-        body += '<tr>' + whoCell(p) +
-          '<td>' + (ts.length ? groupOf(ts, todoKey, todoLi)
-            : (lv ? tag('maint', lv.type) + ' 휴가'
-              : (hol ? tag('warn', hol.name) + ' 공휴일' : ''))) + '</td>' +
+        if (ts.length) { wrote += 1; } else if (!lv) { silent += 1; }
+        if (lv) { away += 1; }
+        /* 휴가와 할 일은 서로를 지우지 않는다(사용자 결정 2026-09-23) —
+           반차나 휴가 중 처리한 건이 있으면 둘 다 보여야 한다. */
+        var cell = (lv ? '<div>' + tag('maint', lv.type) + ' 휴가</div>' : '') +
+          (ts.length ? groupOf(ts, todoKey, todoLi)
+            : (!lv && hol ? tag('warn', hol.name) + ' 공휴일' : ''));
+        body += '<tr>' + whoCell(p) + '<td>' + cell + '</td>' +
           '<td>' + groupOf(issuesIn(p.id, day, day), issueKey, issueLi) + '</td>' +
           remarkCell(p.id, day) + '</tr>';
       });
       h += '<table class="report"><thead><tr><th>부서 · 성명</th>' +
         '<th>' + fmtDot(day) + ' 할 일</th><th>담당 이슈</th><th>비고</th></tr></thead><tbody>' +
         body + '</tbody></table>' +
-        '<p class="lead">작성 ' + wrote + '명' + (hol ? ' · <strong>' + esc(hol.name) + '</strong> — 미작성은 세지 않는다' : ' · 미작성 ' + (DB.people.length - wrote - away) + '명') +
+        '<p class="lead">작성 ' + wrote + '명' +
+        (hol ? ' · <strong>' + esc(hol.name) + '</strong> — 미작성은 세지 않는다' : ' · 미작성 ' + silent + '명') +
         (away ? ' · 휴가 ' + away + '명' : '') + '</p>';
     } else {
       var rows = '';

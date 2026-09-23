@@ -133,13 +133,13 @@ is('9/28(월)은 공휴일이 아니다', D.holidayOf('2026-09-28'), null);
 
 // 9. 휴가 — 지금은 표시뿐이다. "자동 처리"는 만들지 않았고, 그게 미정 결정이다.
 var lday = D.leaves[0].date;
-is('휴가는 사람·날짜로 조회된다', D.leaveOf(2, lday).type, '연차');
+is('휴가는 사람·날짜로 조회된다', D.leaveOf(2, lday).type, '반차');
 is('휴가가 아닌 날은 null', D.leaveOf(2, D.shiftDay(lday, 1)), null);
 var onLeave = D.createTodo({ personId: '2', date: lday, title: '휴가날에 적은 할 일' });
 is('휴가여도 TODO는 써진다 — 막지 않는다', D.todosOf(2, lday).indexOf(onLeave) >= 0, true);
 is('휴가가 상태를 자동으로 바꾸지 않는다', onLeave.status, '시작 전');
 
-// 9-1. 프로젝트 기준 조회 — 프로젝트 상세의 TODO 캘린더가 쓴다. 사람을 가리지 않는다.
+// 9-2. 프로젝트 기준 조회 — 프로젝트 상세의 TODO 캘린더가 쓴다. 사람을 가리지 않는다.
 var pw = D.weekStartOf(T0);
 var mine104 = D.createTodo({ personId: '2', date: T0, title: '내 104 할 일', projectId: '104' });
 var other104 = D.createTodo({ personId: '1', date: T0, title: '남의 104 할 일', projectId: '104' });
