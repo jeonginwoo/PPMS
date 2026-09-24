@@ -179,7 +179,7 @@
   }
 
   function currentRoute() {
-    return (location.hash.replace(/^#\//, '') || 'home').split('/')[0];
+    return (location.hash.replace(/^#\//, '') || 'dashboard').split('/')[0];
   }
 
   /* 이 화면에 걸린 질문 전체(중복 제거, 티어 적용) */

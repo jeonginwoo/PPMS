@@ -324,7 +324,7 @@
       { sel: '.card:nth-of-type(2)', label: '사이트 목록', qs: ['4-D2', '3-S6', '4-D5', '5-B4'] }
     ],
 
-    home: [
+    dashboard: [
       { sel: '.card:nth-of-type(1)', label: '첫 위젯', qs: ['3-S8', '2-B', '2-D'] },
       { sel: '.card:nth-of-type(2)', label: '둘째 위젯', qs: ['6-D1', '6-D3'] }
     ],
