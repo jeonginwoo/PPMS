@@ -41,12 +41,9 @@
   function unsaved() {
     return store.sessions.filter(function (s) { return (s.updatedAt || 0) > (s.exportedAt || 0); });
   }
-  function whoLabel(w) {
-    return { sales: '영업', solution: '솔루션', cs: 'CS', all: '공통' }[w] || '공통';
-  }
   function fileName(s) {
     var nm = (s.name || '대상').replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '');
-    return s.date + '-' + whoLabel(s.who) + '-' + nm + '.md';
+    return s.date + '-' + nm + '.md';
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
   function cur() { return store.sessions[store.current] || store.sessions[0]; }
@@ -72,10 +69,6 @@
       '</span>' +
       '<span class="grow"></span>' +
       '<select class="iv-sel" id="iv-sess" title="인터뷰 대상"></select>' +
-      '<select class="iv-sel iv-hide-narrow" id="iv-who" title="담당 업무">' +
-        '<option value="all">공통</option><option value="sales">영업</option>' +
-        '<option value="solution">솔루션</option><option value="cs">CS</option>' +
-      '</select>' +
       '<button class="iv-btn" id="iv-new">＋</button>' +
       '<span id="iv-timer">00:00</span>' +
       '<button class="iv-btn" id="iv-timer-btn">시작</button>' +
@@ -107,9 +100,6 @@
     });
     document.getElementById('iv-sess').addEventListener('change', function () {
       store.current = Number(this.value); save(); renderSess(); apply(); renderPanel();
-    });
-    document.getElementById('iv-who').addEventListener('change', function () {
-      cur().who = this.value; save();
     });
     document.getElementById('iv-new').addEventListener('click', function () {
       var n = prompt('인터뷰 대상 이름 (또는 구분)', '대상 ' + (store.sessions.length + 1));
@@ -155,8 +145,6 @@
       sel.appendChild(o);
     });
     sel.value = store.current;
-    var w = document.getElementById('iv-who');
-    if (w) { w.value = cur().who || 'all'; }
   }
 
   /* ── 패널 ──────────────────────────────────────────── */
@@ -393,7 +381,6 @@
   function toMarkdown() {
     var s = cur();
     var out = ['# 인터뷰 기록 — ' + s.name, '', '- 일시: ' + s.date,
-               '- 담당: ' + whoLabel(s.who),
                '- 소요: ' + fmt(elapsed || (s.mins || 0) * 60), ''];
     SECTIONS.forEach(function (sec) {
       var qs = Q.filter(function (q) { return q.s === sec.id && answered(q.id); });
