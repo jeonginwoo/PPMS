@@ -154,23 +154,7 @@ is('주간 조회도 사람을 가리지 않는다',
 var nd104 = D.createTodo({ personId: '2', title: '날짜 없는 104', projectId: '104' });
 is('날짜 없는 것은 주간 캘린더에 안 뜬다', D.todosOfProjectBetween(104, pw, D.shiftDay(pw, 4)).indexOf(nd104) >= 0, false);
 
-
-// 10. 완료 토글 — 카드의 완료 버튼이 부르는 길(ACT.toggleTodoDone)이 쓰는 규칙.
-//     여러 날에 놓인 할 일은 상태가 하나이므로 모든 날에서 함께 바뀐다. 이것이 F2 의 미결이다.
-var tg = D.createTodo({ personId: '3', date: T1, title: '완료 토글 대상' });
-tg.dates.push(T0);
-is('가져온 할 일은 두 날에 놓인다', tg.dates.length, 2);
-is('완료 전 — 어제 칸', D.todosOf(3, T1).indexOf(tg) >= 0, true);
-D.setTodoStatus(tg.id, '완료');
-is('완료로 바뀐다', tg.status, '완료');
-is('오늘 완료하면 어제 칸의 같은 카드도 완료다 (상태가 하나 · F2 미결)',
-   D.todosOf(3, T1).filter(function (x) { return x.id === tg.id; })[0].status, '완료');
-is('되돌리면 진행 — 완료 직전 상태는 남기지 않는다', D.setTodoStatus(tg.id, '진행').status, '진행');
-is('토글은 날짜를 건드리지 않는다', tg.dates.length, 2);
-// 토글용 임시 카드는 여기서 치운다 — 남겨 두면 뒤(13.)의 '휴가만 적은 날' 단언이 깨진다.
-D.deleteTodo(tg.id);
-
-// 11. 조직 — 업무보고의 모집단을 고르는 트리. 기본 범위는 **내 팀**이다(사용자 결정 2026-09-28).
+// 10. 조직 — 업무보고의 모집단을 고르는 트리. 기본 범위는 **내 팀**이다(사용자 결정 2026-09-28).
 is('뿌리는 하나다', D.orgs.filter(function (o) { return o.parentId === null; }).length, 1);
 is('모든 가지가 뿌리에서 닿는다 — 떨어진 가지가 없다', D.orgTree(D.orgs[0].id).length, D.orgs.length);
 is('모든 사람이 트리의 가지에 붙어 있다', D.people.every(function (p) { return !!D.org(p.orgId); }), true);
@@ -187,7 +171,7 @@ is('그래서 내 팀보다 넓다', D.peopleInOrg(dept).length > D.peopleInOrg(
 is('회사를 고르면 전원이다', D.peopleInOrg(D.orgs[0].id).length, D.people.length);
 is('사람이 없는 팀도 트리에 남는다 — 0명으로 보인다', D.peopleInOrg(51).length, 0);
 
-// 12. 주말 칸 — 펼쳐도 **주의 시작은 월요일**이다(사용자 결정 2026-09-28).
+// 11. 주말 칸 — 펼쳐도 **주의 시작은 월요일**이다(사용자 결정 2026-09-28).
 //     일요일을 앞에 놓으면 그 주의 일요일이 월요일보다 앞선 날짜가 되어 보고의 주와 어긋난다.
 var ws = D.weekStartOf(T0);
 is('접으면 월~금 5칸', D.weekDays(ws, 5).map(dow), ['월', '화', '수', '목', '금']);
@@ -207,7 +191,7 @@ is('주간보고 실적도 월~일이라 주말 건이 들어간다',
 is('여러 날에 놓여도 주간 실적에는 한 번만 찍힌다',
    D.todosBetween(2, ws, D.shiftDay(ws, 6)).filter(function (x) { return x.id === 714; }).length, 1);
 
-// 13. '작성된 사람만' — 쉬는 날에는 기본으로 켜진다(사용자 결정 2026-09-28)
+// 12. '작성된 사람만' — 쉬는 날에는 기본으로 켜진다(사용자 결정 2026-09-28)
 is('쉬는 날 = 주말 또는 공휴일', [D.isOffDay(sat), D.isOffDay('2026-10-09'), D.isOffDay(ws)], [true, true, false]);
 is('공휴일은 평일에도 있다 — 10/09 한글날은 금요일이다',
    [dow('2026-10-09'), D.isWeekend('2026-10-09'), !!D.holidayOf('2026-10-09')], ['금', false, true]);
@@ -218,8 +202,7 @@ is('담당 이슈가 있어도 작성으로 치지 않는다 — 열려 있기�
 is('휴가는 작성으로 친다 — 그 날 상태가 적힌 것이다',
    [D.todosOf(3, T1).length, !!D.leaveOf(3, T1), D.wroteOn(3, T1)], [0, true, true]);
 
-// 14. 삭제
-
+// 13. 삭제
 is('삭제', D.deleteTodo(t.id), true);
 is('삭제 후 조회 불가', D.byId(D.todos, t.id), null);
 is('삭제하면 그 날짜 업무보고에서도 사라진다', D.todosOn(T0).indexOf(t) >= 0, false);

@@ -7,6 +7,9 @@ Write the spec for the current unit.
 1. Precondition: this unit's prototype is approved and snapshotted. If it is not,
    stop and run `/proto` instead.
 2. Copy `docs/features/_TEMPLATE.md` to `docs/features/<NN-slug>.md` and fill it.
+   Its `왜` line carries this unit's `docs/WHY.md` §2 block id (`P2`) — the reasoning
+   stays there and is never copied into the spec. No block yet means the prototype step
+   skipped it: write the block first, then the spec.
 3. **One page.** Write only what the prototype showed and what the user decided.
    Never invent requirements the prototype did not raise, never restate the
    backbone, never describe another unit. A spec that needs a table of contents

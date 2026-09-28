@@ -16,11 +16,18 @@ Start a work cycle.
    - no prototype snapshot yet ....... this is a `/proto` cycle
    - prototype approved, no spec ..... this is a `/spec` cycle
    - spec approved ................... this is an implementation cycle
-4. Present a plan for **exactly one step of one unit** and wait for user approval
+4. **For a 프로토 cycle, ask before planning.** This unit's `docs/WHY.md` block starts
+   here, not after the screens exist — ask the user 지금은 그 일을 어떻게 하고 계세요(쓰는
+   도구·양식까지)? · 그중 무엇이 불편하세요?, and carry the answer into the plan as the
+   unit's 지금. These two answers are **inputs to the prototype**: asked afterwards they
+   arrive too late to change a screen, and the WHY ends up written to match whatever was
+   already built (measured 2026-09-28). Skip only when §2 already holds this unit's block
+   and the user confirms it still holds.
+5. Present a plan for **exactly one step of one unit** and wait for user approval
    before writing any prototype, spec, or code.
-5. State the expected diff size in the plan. If it is over the 400-line budget,
+6. State the expected diff size in the plan. If it is over the 400-line budget,
    split the unit first and say so — never ask permission to exceed the budget.
-6. If the step depends on something `docs/BACKBONE.md` §4 lists as 미확정, name
+7. If the step depends on something `docs/BACKBONE.md` §4 lists as 미확정, name
    that open question in the plan. The prototype exists to settle it.
-7. For an implementation step, read the convention covering the files you will touch
+8. For an implementation step, read the convention covering the files you will touch
    (`docs/conventions/`) before planning — not after the code is written.

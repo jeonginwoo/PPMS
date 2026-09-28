@@ -446,21 +446,12 @@
      내 것이 아니면 눌러도 수정으로 가지 않는다(읽기만) — 남의 TODO를 고치는 것은 권한(F5) 문제다. */
   function todoCard(t, withWho, withDate) {
     var last = DB.lastDate(t);
-    var done = t.status === '완료';
-    var late = last && last < DB.today() && !done;
+    var late = last && last < DB.today() && t.status !== '완료';
     var p = t.projectId ? DB.project(t.projectId) : null;
     var mine = t.personId === DB.ME;
-    /* 완료 버튼 — 내 것에만 붙는다. 카드를 눌러 수정 창을 여는 것보다 한 번에 끝나는 길이 필요하다.
-       카드의 onclick 위에 있으므로 stopPropagation 으로 수정 창이 함께 열리는 것을 막는다.
-       되돌리면 '진행' 이 된다 — 완료를 찍기 전 상태가 무엇이었는지는 남기지 않는다. */
-    var doneBtn = mine
-      ? '<button type="button" class="tdone' + (done ? ' on' : '') +
-        '" title="' + (done ? '완료 취소' : '완료로 표시') + '"' +
-        ' onclick="event.stopPropagation();ACT.toggleTodoDone(' + t.id + ')">✓</button>'
-      : '';
-    return '<div class="tcard' + (late ? ' late' : '') + (done ? ' done' : '') + (mine ? '' : ' other') +
-      '" onclick="ACT.' + (mine ? 'editTodo' : 'viewTodo') + '(' + t.id + ')">' +
-      '<div class="th">' + doneBtn + '<div class="tt">' + esc(t.title) + '</div></div>' +
+    return '<div class="tcard' + (late ? ' late' : '') + (mine ? '' : ' other') + '" onclick="ACT.' +
+      (mine ? 'editTodo' : 'viewTodo') + '(' + t.id + ')">' +
+      '<div class="tt">' + esc(t.title) + '</div>' +
       (p && !withWho ? '<div class="tp"><i class="dot" style="background:' + projDot(p.id) + '"></i>' +
         '<span class="name">' + esc(p.name) + '</span></div>' : '') +
       '<div class="tp">' + todoTag(t.status) +
@@ -1302,17 +1293,6 @@
       UI.refresh();
       ACT.editTodo(id);
       UI.toast(fmtDot(d) + '에서 뺐습니다');
-    },
-
-    /* 완료 ↔ 진행 한 번에 — 캘린더에서 체크만으로 끝내는 길.
-       할 일 하나에 상태가 하나이므로, 여러 날에 놓인 할 일은 모든 날에서 함께 바뀐다(F2). */
-    toggleTodoDone: function (id) {
-      var t = DB.byId(DB.todos, id);
-      var next = t.status === '완료' ? '진행' : '완료';
-      DB.setTodoStatus(id, next);
-      UI.refresh();
-      UI.toast('「' + t.title + '」 ' + next +
-        (t.dates.length > 1 ? ' — ' + t.dates.length + '개 날짜에 함께 반영됩니다' : ''));
     },
 
     /* 캘린더의 뷰·주·주말 표시는 화면 상태다(저장 대상이 아니다) */
