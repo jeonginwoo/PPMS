@@ -52,7 +52,7 @@
     { s:'s3', id:'3-S6', tier:30, who:['cs'],
       q:'계약별 사이트 목록 — 한 계약에 사이트가 45개 정도 있다면, 이 화면에서 필요한 사이트를 찾고 관리하기 괜찮을까요?' },
     { s:'s3', id:'3-S7', tier:30, who:['solution','cs'],
-      q:'이슈 관리 — 현재 이슈는 어디에 기록하고 계세요? 이 화면에서 관리한다면 편리하거나 불편할 것 같은 점이 있나요?' },
+      q:'이슈 관리 — 이 화면에서 관리한다면 편리하거나 불편할 것 같은 점이 있나요?' },
     { s:'s3', id:'3-S8', tier:30, who:['common'],
       q:'홈 화면 — 업무를 시작할 때 이 화면에서 확인하고 싶은 정보가 있나요? 자주 열어볼 필요가 없을 것 같다면 그 이유도 말씀해 주세요.' },
     { s:'s3', id:'3-S9', tier:10, who:['common'],
@@ -105,11 +105,11 @@
     { s:'s4c', id:'4-C2', tier:20, who:['solution'],
       q:'보류되거나 중단된 프로젝트를 따로 구분하는게 좋을까요?' },
     { s:'s4c', id:'4-C3', tier:20, who:['solution'],
-      q:'계약 M/M과 실제 투입 M/M을 따로 관리하시나요? 실제 투입량이 계약보다 많아지면 어떤 절차로 확인하거나 조정하시나요?' },
+      q:'계약 M/M과 실제 투입 M/M을 따로 관리하시나요? 실제 투입량이 계약보다 많아지면 어떤 절차로 확인하거나 조정하는 게 좋아 보이나요?' },
     { s:'s4c', id:'4-C4', tier:30, who:['solution'],
       q:'최초 일정과 변경된 일정을 모두 확인할 수 있게 하는게 좋을까요? 둘중 하나만 관리한다면 어떤걸 택해서 관리하는게 좋을까요' },
     { s:'s4c', id:'4-C6', tier:30, who:['solution'],
-      q:'협력사 인력이나 프리랜서가 참여하는 경우가 있나요? 이 인력도 시스템에서 함께 관리해야 하나요?' },
+      q:'협력사 인력이나 프리랜서가 참여하는 경우가 있나요? 만약 그런 경우가 추가될 것을 대비해 두는 게 좋아 보일까요?' },
     { s:'s4c', id:'4-C7', tier:20, who:['solution'],
       q:'솔루션 목록의 열 — 지금 목록에는 고객사, 프로젝트명, 상태, 계약 M/M, 기간, 진행률, 투입 인력이 보입니다. 이 중 목록에서 빼도 되는 항목이 있나요? 반대로 목록에서 바로 보여야 하는데 빠진 항목이 있나요? (예: PM, 실제 투입 M/M, 검수 예정일, 계약금액)',
       why:'목록에 둘 열과 상세 화면에만 둘 항목을 구분한다. 3-S4(불필요한 항목)를 메뉴별로 좁혀 묻는 질문이다.' },
@@ -132,7 +132,7 @@
     { s:'s4d', id:'4-D5', tier:30, who:['cs'],
       q:'고객 담당자 연락처는 어디에 관리하고 계세요? 계약사 담당자와 실제 사용 고객사의 담당자를 따로 관리해야 하나요?' },
     { s:'s4d', id:'4-D6', tier:30, who:['cs'],
-      q:'OEM 등 앞 단계의 이관 없이 직접 등록하는 계약은 전체의 어느 정도인가요? 계약 기간 중에 대상 사이트가 추가되기도 하나요?' },
+      q:'앞 단계의 이관 없이 유지보수만 신규로 계약하는 경우가 있나요? 계약 기간 중에 대상 사이트가 추가되기도 하나요?' },
     { s:'s4d', id:'4-D7', tier:30, who:['cs'],
       q:'정기점검을 계약 주기가 어떻게 구분되어있을까요? 시스템에서 점검 일정을 확인하거나 알림을 받을 필요가 있나요?' },
     { s:'s4d', id:'4-D8', tier:20, who:['cs','sales'],
@@ -165,8 +165,6 @@
     { s:'s5b', id:'5-B3', tier:20, who:['solution','cs'],
       q:'이관할 때 등록해야 하는 사이트는 보통 몇 개인가요? 납품처가 여러 곳이라면 한 번에 입력해야 하나요?',
       why:'현재 이관 화면에서는 사이트를 하나만 등록한다.' },
-    { s:'s5b', id:'5-B4', tier:30, who:['cs'],
-      q:'유지보수 담당 엔지니어는 이관할 때 정해져 있나요, 이후에 배정되나요?' },
     { s:'s5b', id:'5-B5', tier:30, who:['sales','cs'],
       q:'구축 없이 라이선스만 판매하는 경우처럼, 솔루션 단계를 거치지 않고 바로 유지보수로 넘어가는 건도 있나요?' },
     { s:'s5b', id:'5-B6', tier:20, who:['solution','cs'],
@@ -198,7 +196,7 @@
 
     /* ── 6-C. 유지보수 이슈 ── */
     { s:'s6c', id:'6-C1', tier:30, who:['cs'],
-      q:'처리가 끝났다고 안내했는데 고객이 아직 해결되지 않았다고 하면 어떻게 처리하시나요? 기존 이슈를 다시 진행 상태로 바꾸나요? 이런 경우가 얼마나 자주 있나요?',
+      q:'처리가 끝났다고 안내했는데 고객이 아직 해결되지 않았다고 하면, 기존 이슈를 다시 진행 상태로 바꾸는 게 나을까요? 시간이 꽤 지난 뒤라면 새 이슈로 등록하는 게 나을까요?',
       why:'기존 버전에서는 ‘고객 확인 대기 → 처리 중’ 변경이 막혀 있어 완료 후 재개해야 한다. 실제 대응에 필요한 상태 변경인지 확인한다.' },
     { s:'s6c', id:'6-C2', tier:30, who:['cs'],
       q:'이슈 상태를 ‘접수 → 처리 중 → 고객 확인 대기 → 완료’로 구분하면 실제 업무에 맞을까요? 전화 한 통으로 해결한 문의도 각 단계를 거쳐 기록해야 할까요? 이슈 유형은 장애, 문의, 요청 외에 더 필요한 것이 있나요?' },
@@ -206,9 +204,6 @@
       q:'이슈를 잘못 등록했을 때 내용을 수정하는 기능과 삭제하는 기능이 각각 필요할까요? 등록자와 담당자 중 누구에게 허용하면 좋을까요?' },
     { s:'s6c', id:'6-C4', tier:30, who:['cs'],
       q:'이슈를 등록하면 해당 사이트의 담당 엔지니어에게 자동 배정되는 방식은 어떠세요? 담당자가 바뀌었을 때 알림도 필요한가요?' },
-    { s:'s6c', id:'6-C5', tier:30, who:['cs'],
-      q:'고객이 시스템에 직접 이슈를 등록할 필요도 있나요, 내부 담당자가 접수해서 관리하면 될까요?',
-      why:'고객이 직접 사용하는 범위까지 필요한지 확인한다.' },
     { s:'s6c', id:'6-C6', tier:30, who:['solution','cs'],
       q:'이슈 목록의 열 — 지금 목록에는 구분, 제목, 프로젝트(유지보수는 사이트), 상태, 담당자, 접수일이 보입니다. 이 중 목록에서 빼도 되는 항목이 있나요? 반대로 목록에서 바로 보여야 하는데 빠진 항목이 있나요? (예: 긴급도, 처리 기한, 요청한 고객 담당자, 완료일)',
       why:'목록에 둘 열과 상세 화면에만 둘 항목을 구분한다.' },
@@ -245,15 +240,8 @@
       q:'모바일 — 외근이나 고객사 방문 중 휴대폰으로 확인할 일이 있나요? 조회만 가능하면 될까요, 현장에서 입력하거나 수정할 필요도 있나요?' },
 
     /* ── 6-F. TODO와 업무보고 ── */
-    { s:'s6f', id:'6-F1', tier:10, who:['common'],
-      q:'업무보고는 누가, 언제, 누구에게 제출하나요? 제출한 뒤에 고치는 일이 있나요?',
-      why:'보고를 제출 시점에 얼릴지, TODO에서 그때그때 만들지를 정한다(F11).' },
-    { s:'s6f', id:'6-F2', tier:20, who:['common'],
-      q:'어제 못 끝낸 일을 오늘로 가져오면, 어제 보고에는 "못 끝냄"으로 남아야 하나요, 나중에 끝낸 대로 바뀌어도 괜찮나요?',
-      why:'지금은 할 일의 상태가 하나뿐이라 오늘 완료하면 어제 칸의 같은 카드도 완료로 보인다.' },
     { s:'s6f', id:'6-F3', tier:20, who:['common'],
-      q:'차주 계획은 문장으로 쓰고 실적은 TODO에서 나옵니다. 계획과 할 일을 둘 다 쓰는 게 이중 입력으로 느껴지나요? 계획 대비 실적을 비교해 볼 일이 있나요?',
-      why:'비교하려면 보고에 그 주의 계획 칸이 하나 더 필요한데, 지금 양식에는 없다.' },
+      q:'지금 TODO 개인 페이지를 이렇게 구성했는데, 실제로 쓰실 것 같으세요? 번거로워 보이는 부분이 있나요? 번거롭다면 빼고 싶은 부분, 반대로 더 넣고 싶은 부분이 있나요?' },
     { s:'s6f', id:'6-F4', tier:20, who:['common'],
       q:'보고의 "이슈사항"에는 보통 무엇을 쓰시나요? 담당 이슈(장애·요청)인가요, 리스크나 애로사항 같은 보고용 문장인가요?',
       why:'지금은 담당 이슈(F6)에서 가져온다. 보고용 문장이면 사람이 쓰는 칸이 하나 더 생긴다.' },
@@ -269,19 +257,16 @@
       q:'다른 사람의 TODO나 보고를 볼 일이 있나요? 전원을 봐야 하나요, 내 팀만이면 되나요? 팀장이 팀원의 TODO를 고칠 일이 있나요?',
       why:'권한(F5)과 이어진다. 지금 TODO는 내 것만, 업무보고는 전원이 보인다.' },
     { s:'s6f', id:'6-F9', tier:30, who:['common'],
-      q:'비고 칸에는 보통 무엇을 쓰시나요? 비고 말고도 보고에 직접 써야 하는 칸이 있나요?',
-      why:'비고만 사람이 쓰는 저장물이라 "보고는 저장하지 않는다"가 이 칸에서 깨진다.' },
+      q:'비고 말고도 보고 표에 함께 넣어야 할 항목이 있나요?' },
     { s:'s6f', id:'6-F10', tier:30, who:['common'],
-      q:'보고서에서 부서나 사람 순서를 정한 기준이 있나요? 부서별로 접어서 보거나 내 조직만 보면 되나요?',
-      why:'지금은 부서 이름 문자열 순이다. 조직(F1)이 생기면 조직 트리 순서를 따라야 한다. 의사결정자에게 우선 묻는다.' },
+      q:'보고서를 부서별로 걸러서 볼 수 있는 기능을 넣는 게 좋을까요?',
+      why:'지금은 부서 구분 없이 전원이 한 표에 나온다.' },
 
     /* ── 7. 마무리와 우선순위 ── */
     { s:'s7', id:'7-A', tier:10, who:['common'],
       q:'오늘 본 기능 중 꼭 남겨야 할 것은 무엇인가요? 줄이거나 빼도 괜찮은 기능도 있나요? 기본 기능만으로 업무를 처리하기 어렵다면, 가장 먼저 보완해야 할 것은 무엇인가요?' },
     { s:'s7', id:'7-B', tier:20, who:['common'],
       q:'업무 관리 방식이 정리되면 어떤 점이 가장 달라졌으면 하세요? 지금 방식 때문에 누락, 중복 작업, 일정 지연 등이 생긴 사례가 있나요?' },
-    { s:'s7', id:'7-C', tier:20, who:['common'],
-      q:'영업, 솔루션, CS 외에 이 시스템을 사용할 부서가 또 있나요? 추가로 의견을 들어보면 좋을 담당자도 알려주세요.' },
     { s:'s7', id:'7-D', tier:30, who:['common'],
       q:'기존 데이터를 새 시스템으로 옮겨야 하나요? 진행 중인 건, 최근 몇 년치, 전체 이력 중 어느 범위가 필요한가요?',
       why:'참고로 저장소 문서에 기재된 v3 데이터 규모는 인원 44명, 프로젝트 382건, 유지보수 계약 105건이다. 실제 이관 대상과 최신 건수는 별도로 확인한다.' },
@@ -321,9 +306,9 @@
       { sel: 'thead th:nth-child(4)', label: '계약 M/M 열', qs: ['4-C3'] },
       { sel: 'thead th:nth-child(5)', label: '기간 열', qs: ['4-C4'] },
       { sel: 'thead th:nth-child(6)', label: '진행률 열', qs: ['4-C1', '3-S5', '6-A1', '6-A2'] },
-      { sel: 'thead th:nth-child(7)', label: '투입 열', qs: ['4-C6', '4-C3'] },
+      { sel: 'thead th:nth-child(7)', label: '투입 열', qs: ['4-C6'] },
       { sel: 'button[onclick^="ACT.progress"]', label: '진행률 수정', qs: ['4-C1', '3-S5'], all: true },
-      { sel: 'button[onclick^="ACT.assign"]', label: '인력 투입', qs: ['4-C6', '4-C3', '6-A5'] },
+      { sel: 'button[onclick^="ACT.assign"]', label: '인력 투입', qs: ['4-C6', '6-A5'] },
       { sel: 'button[onclick^="ACT.toMaintenance"]', label: '유지보수 이관 버튼', qs: ['5-B1', '5-B2', '5-B3', '5-B6', '4-D4'], all: true },
       { sel: '.head .btn[disabled]', label: '＋ 자체 생성 (미정)', qs: ['5-A5', '5-A6'] },
       { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['5-B1', '5-A4'] }
@@ -333,12 +318,12 @@
       { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-D8'] },
       { sel: 'thead th:nth-child(1)', label: '계약사 열', qs: ['4-A1', '4-D5'] },
       { sel: 'thead th:nth-child(3)', label: '상태 열', qs: ['4-D1'] },
-      { sel: 'thead th:nth-child(4)', label: '기간 열', qs: ['4-D1', '4-D3', '4-D4'] },
+      { sel: 'thead th:nth-child(4)', label: '기간 열', qs: ['4-D3', '4-D4'] },
       { sel: 'thead th:nth-child(5)', label: '계약금액 열', qs: ['4-D6'] },
       { sel: 'thead th:nth-child(6)', label: '사이트 열', qs: ['4-D2', '3-S6', '5-B3'] },
       { sel: 'thead th:nth-child(7)', label: '출처 열', qs: ['4-D6', '5-B5'] },
       { sel: 'button[onclick^="ACT.newContract"]', label: '＋ 계약 신규 생성', qs: ['4-D6', '4-D3', '5-B5'] },
-      { sel: 'button[onclick^="ACT.editContract"]', label: '계약 수정', qs: ['4-D1', '4-D7'] },
+      { sel: 'button[onclick^="ACT.editContract"]', label: '계약 수정', qs: ['4-D7'] },
       { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['5-B3', '4-D2'] }
     ],
 
@@ -347,7 +332,7 @@
       { sel: 'thead th:nth-child(1)', label: '구분(유형) 열', qs: ['6-C2'] },
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },
       { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4'] },
-      { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7', '6-C5'] },
+      { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7'] },
       { sel: 'button[onclick^="ACT.delIssue"]', label: '삭제 버튼', qs: ['6-C3'] },
       { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C2', '6-C3'] }
     ],
@@ -357,8 +342,8 @@
       { sel: 'thead th:nth-child(1)', label: '구분(유형) 열', qs: ['6-C2'] },
       { sel: 'thead th:nth-child(3)', label: '사이트 열', qs: ['4-D2'] },
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },
-      { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4', '5-B4'] },
-      { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7', '6-C5'] },
+      { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4'] },
+      { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7'] },
       { sel: 'button[onclick^="ACT.delIssue"]', label: '삭제 버튼', qs: ['6-C3'] },
       { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C3'] }
     ],
@@ -366,14 +351,14 @@
     project: [
       { sel: '.card.common', label: '공통 project 테이블', qs: ['4-A1', '4-A2', '4-A4', '3-S3'] },
       { sel: '.card.sales', label: '영업 행', qs: ['4-B1', '4-B2', '4-B3'] },
-      { sel: '.card.solution', label: '솔루션 행', qs: ['4-C1', '4-C2', '4-C3', '4-C4'] },
-      { sel: '.card.maint', label: '유지보수 계약 행', qs: ['4-D1', '4-D2'] },
+      { sel: '.card.solution', label: '솔루션 행', qs: ['4-C1', '4-C2', '4-C4'] },
+      { sel: '.card.maint', label: '유지보수 계약 행', qs: ['4-D2'] },
       { sel: 'ol, ul.steps, .steps', label: '이관 내역(파생)', qs: ['5-C1', '6-A7'] }
     ],
 
     contract: [
-      { sel: '.card.maint', label: '계약 정보', qs: ['4-D1', '4-D3', '4-D6', '4-D7'] },
-      { sel: '.card:nth-of-type(2)', label: '사이트 목록', qs: ['4-D2', '3-S6', '4-D5', '5-B4'] }
+      { sel: '.card.maint', label: '계약 정보', qs: ['4-D3', '4-D6', '4-D7'] },
+      { sel: '.card:nth-of-type(2)', label: '사이트 목록', qs: ['4-D2', '3-S6', '4-D5'] }
     ],
 
     dashboard: [
@@ -383,21 +368,20 @@
 
     'my-todos': [
       { sel: '.head .btn.primary', label: '＋ TODO', qs: ['3-S9', '6-F6'] },
-      { sel: 'button[onclick^="ACT.pullTodo"]', label: '가져오기 버튼', qs: ['6-F2'], all: true },
       { sel: '.planbox', label: '주간 계획 칸', qs: ['6-F3'], all: true },
       { sel: '.dh .tag.maint', label: '휴가 표시', qs: ['6-F7'], all: true },
       { sel: '.strip', label: '날짜 없음 · 주말 줄', qs: ['6-F6'], all: true },
-      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-F2', '6-F6', '6-F7', '6-F8'] }
+      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-F6', '6-F7', '6-F8'] }
     ],
 
     report: [
-      { sel: 'button[onclick*="reportMode"]', label: '일간 · 주간 전환', qs: ['6-F1', '3-S10'], all: true },
+      { sel: 'button[onclick*="reportMode"]', label: '일간 · 주간 전환', qs: ['3-S10'], all: true },
       { sel: 'table.report thead th:nth-child(1)', label: '부서 · 성명 열', qs: ['6-F8', '6-F10'] },
-      { sel: 'table.report thead th:nth-child(2)', label: '할 일 · 항목 열', qs: ['3-S10', '6-F2'] },
+      { sel: 'table.report thead th:nth-child(2)', label: '할 일 · 항목 열', qs: ['3-S10'] },
       { sel: 'td.item', label: '주간 항목(실적 · 계획 · 이슈 · 프로젝트)', qs: ['6-F3', '6-F4', '6-F5'], all: true },
       { sel: 'button[onclick^="ACT.editPlan"]', label: '차주 계획 작성', qs: ['6-F3'], all: true },
       { sel: 'td.remark', label: '비고 칸', qs: ['6-F9'], all: true },
-      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-F1', '6-F4', '6-F5', '6-F9'] }
+      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-F4', '6-F5', '6-F9'] }
     ],
 
     people: [
@@ -410,7 +394,7 @@
   };
 
   /* 내비게이션에 붙는 핫스팟 — #main 밖이라 따로 둔다 */
-  var NAV_HOTSPOT = { sel: '#side .brand', label: '내비 구조 전체', qs: ['7-C', '6-D4'] };
+  var NAV_HOTSPOT = { sel: '#side .brand', label: '내비 구조 전체', qs: ['6-D4'] };
 
   g.IV = { SECTIONS: SECTIONS, Q: Q, HOTSPOTS: HOTSPOTS, NAV_HOTSPOT: NAV_HOTSPOT, KEY: 'pms-interview-2026-09-22' };
 })(window);
