@@ -38,7 +38,7 @@ soft_step() {   # reports a number, never fails the run
 
 check_docs() {
   local missing=0 f
-  for f in CLAUDE.md docs/PROGRESS.md docs/ROADMAP.md docs/BACKBONE.md; do
+  for f in CLAUDE.md docs/PROGRESS.md docs/ROADMAP.md docs/BACKBONE.md docs/WHY.md; do
     [ -f "$f" ] || { echo "missing required doc: $f"; missing=1; }
   done
   return $missing
@@ -109,7 +109,7 @@ check_cycle_discipline() {
     echo "not a git repo — skipped"; return 0; }
 
   if [ "$branch" = "main" ]; then
-    protected=$(git status --porcelain -- .       ':(exclude)docs/PROGRESS.md' ':(exclude)docs/ROADMAP.md' ':(exclude)docs/BACKBONE.md'       ':(exclude)docs/conventions' ':(exclude).claude' ':(exclude)scripts'       ':(exclude)CLAUDE.md' ':(exclude).gitignore' ':(exclude).gitattributes' 2>/dev/null)
+    protected=$(git status --porcelain -- .       ':(exclude)docs/PROGRESS.md' ':(exclude)docs/ROADMAP.md' ':(exclude)docs/BACKBONE.md'       ':(exclude)docs/WHY.md' ':(exclude)docs/features/_TEMPLATE.md'       ':(exclude)docs/conventions' ':(exclude).claude' ':(exclude)scripts'       ':(exclude)CLAUDE.md' ':(exclude).gitignore' ':(exclude).gitattributes' 2>/dev/null)
     if [ -n "$protected" ]; then
       echo "on main with work that needs a branch (git-workflow section 1):"
       echo "$protected"
@@ -205,9 +205,39 @@ check_diff_budget() {
   [ "$code" -le "$BUDGET" ]
 }
 
+check_why_page() {
+  # docs/WHY.md is the one file in this repo that PRD-growth would come in through
+  # (v3: PRD-pms.md 150KB). "One page" is a rule, so it is measured, not wished.
+  # Second half: only what the user actually said may sit in section 2. An inferred
+  # line reads as plausible, survives review, and then becomes a spec's 근거
+  # (measured 2026-09-28: two of them were wrong about how the work is done today).
+  local max=90 n bad=0 sec2
+  [ -f docs/WHY.md ] || { echo "missing docs/WHY.md"; return 1; }
+  n=$(wc -l < docs/WHY.md | tr -d ' ')
+  echo "docs/WHY.md : $n / $max lines"
+  if [ "$n" -gt "$max" ]; then
+    echo "over one page — cut it, or move detail into the unit spec under docs/features/"
+    bad=1
+  fi
+  sec2=$(awk '/^## 2\./{f=1;next} /^## 3\./{f=0} f' docs/WHY.md)
+  if grep -q '확인중' <<<"$sec2"; then
+    echo "section 2 holds a 확인중 — an unconfirmed pain belongs in section 3. Ask the user first."
+    bad=1
+  fi
+  awk '
+    function flush() { if (b != "" && !seen) { print "section 2 block with no 근거 (ask the user, then tag it): " b; rc=1 } }
+    /^### /{ flush(); b=$0; seen=0; next }
+    /`(결정|실측|피드백)`/{ if (b != "") seen=1 }
+    END { flush(); exit rc+0 }
+  ' <<<"$sec2" || bad=1
+  [ $bad -eq 0 ] && echo "section 2: every block cites 근거, no 확인중"
+  return $bad
+}
+
 # --- run ----------------------------------------------------------------------
 
 step "docs" check_docs
+step "WHY one page" check_why_page
 step "prototype links" check_proto_links
 step "doc references" check_doc_refs
 step "prototype build-free" check_proto_buildfree

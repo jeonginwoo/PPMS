@@ -25,7 +25,16 @@ Build the planning prototype for the current unit.
 5. Run `bash scripts/verify.sh --quick` — broken links fail it.
 6. Hand it to the user: say what to look at, and list the open questions this
    prototype is meant to settle (`docs/BACKBONE.md` §4, or the unit's own).
-7. Revise on feedback in the same cycle. When the user approves, freeze it:
+7. **Record the why — but ask before writing it.** A `docs/WHY.md` §2 block is the
+   user's own account of their work, never your inference from the screens. Before
+   adding or changing one, ask them — 지금은 그 일을 어떻게 하고 계세요(쓰는 도구·양식까지)? ·
+   그중 무엇이 불편하세요? · 이 화면이 그 불편을 없애나요? — and write the block from the
+   answer, tagging its 근거. **Anything you did not ask about is `확인중` and goes to §3**,
+   never to §2; `scripts/verify.sh` fails on a §2 that carries a 확인중 or a block with no
+   근거. Shape: **one block per feature unit** (지금 · 바꾼 것 · 노리는 것), never one per
+   screen or per decision — that altitude belongs to the prototype and the unit spec, and
+   a WHY that lists them stops being readable as *why*. Capped at one page.
+8. Revise on feedback in the same cycle. When the user approves, freeze it:
    `bash scripts/proto-snapshot.sh <nn-slug>`, then fill that row's last column
    in `prototype/snapshots/INDEX.md` with what the stage settled. Continue with
    `/spec` in the next cycle.

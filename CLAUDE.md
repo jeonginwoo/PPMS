@@ -16,6 +16,10 @@ like any other.
 Read `docs/PROGRESS.md` first — current state, decision log, next task.
 `docs/ROADMAP.md` is the feature-unit backlog. `docs/BACKBONE.md` is the skeleton
 (three areas + the transfer pipeline) — a sketch to be confirmed, not a frozen spec.
+`docs/WHY.md` is why the product exists and why each unit exists — one block per
+**feature unit** (지금 → 바꾼 것 → 노리는 것), capped at one page. **Its §2 is written
+from what the user said when asked, never inferred from the screens.** **It is not a PRD and never becomes
+one**: requirements live in the unit specs, features in the ROADMAP.
 
 ## The cycle (invariant — never skip a step, never run two units at once)
 
@@ -26,7 +30,8 @@ Read `docs/PROGRESS.md` first — current state, decision log, next task.
 1. **One feature unit per cycle.** A unit is what fits in one reviewable diff.
    (The prototype step may be wider — see 6. Nothing else may.)
 2. Planning starts as a **plain HTML prototype** in `prototype/`. Never write a
-   spec before the user has reviewed the prototype for that unit.
+   spec before the user has reviewed the prototype for that unit. When the prototype
+   settles a pain, its row goes to `docs/WHY.md` — one line, in that cycle.
 3. The spec is `docs/features/<NN-slug>.md` and stays **one page**. There is no
    global PRD in this repo — writing one is the mistake this repo exists to avoid.
 4. Implementation never starts without an approved spec file for that unit.
@@ -64,6 +69,8 @@ bash scripts/proto-snapshot.sh <label>  # freeze prototype/ into prototype/snaps
 2. `prototype/snapshots/` is **append-only** — a frozen stage is never edited and
    never deleted, only added to. Write there through `scripts/proto-snapshot.sh` only.
 3. `docs/BACKBONE.md` changes only together with a PROGRESS decision-log entry.
+   So do `docs/WHY.md` §1 (왜 PMS인가) and §4 (노리지 않는 것); its §2 rows are added
+   freely by the prototype step.
 4. Every feature unit has exactly one file under `docs/features/`. No unit spec
    describes another unit's screens.
 5. The transfer pipeline 영업 → 솔루션 → 유지보수 is the backbone. Features hang off
