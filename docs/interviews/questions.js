@@ -299,7 +299,7 @@
      =========================================================== */
   var HOTSPOTS = {
     '*': [
-      { sel: '.head h1', label: '이 화면 전체', qs: ['3-S1', '3-S4', '2-B'] }
+      { sel: '.head h1', label: '이 화면 전체', qs: ['3-S1', '3-S4'] }
     ],
 
     sales: [
@@ -378,7 +378,7 @@
     ],
 
     dashboard: [
-      { sel: '.card:nth-of-type(1)', label: '첫 위젯', qs: ['3-S8', '2-B', '2-D'] },
+      { sel: '.card:nth-of-type(1)', label: '첫 위젯', qs: ['3-S8'] },
       { sel: '.card:nth-of-type(2)', label: '둘째 위젯', qs: ['6-D1', '6-D3'] }
     ],
 

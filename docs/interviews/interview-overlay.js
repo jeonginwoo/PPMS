@@ -8,8 +8,20 @@
   var byId = {};
   Q.forEach(function (q) { byId[q.id] = q; });
 
+  /* 공통 질문 — 특정 화면에 매이지 않는 질문. 화면 핫스팟('*' 포함)이 가리키는 id 를 빼고 남은 것이다.
+     내비 핫스팟(#side .brand)은 화면이 아니므로 그 질문도 여기 들어온다. 순서는 Q, 곧 섹션 순서를 따른다. */
+  var COMMON = (function () {
+    var onScreen = {};
+    Object.keys(HOTSPOTS).forEach(function (route) {
+      HOTSPOTS[route].forEach(function (sp) {
+        sp.qs.forEach(function (id) { onScreen[id] = 1; });
+      });
+    });
+    return Q.filter(function (q) { return !onScreen[q.id]; }).map(function (q) { return q.id; });
+  })();
+
   var store = load();
-  var view = { on: true, tier: 30, panel: true, sel: null, selLabel: '' };
+  var view = { on: true, tier: 30, panel: true, sel: null, selLabel: '', tab: 'screen' };
   var elapsed = 0, timerId = null;
 
   /* ── 저장 ──────────────────────────────────────────── */
@@ -156,26 +168,17 @@
       '<div class="body" id="iv-p-body"></div>' +
       '<div class="foot">' +
         '<button class="iv-btn" id="iv-all">이 화면</button>' +
+        '<button class="iv-btn" id="iv-common">공통</button>' +
         '<button class="iv-btn" id="iv-every">전체</button>' +
         '<button class="iv-btn" id="iv-rest">남은 10분</button>' +
       '</div>';
     document.body.appendChild(p);
     document.body.classList.add('iv-panel-open');
 
-    document.getElementById('iv-all').addEventListener('click', function () {
-      view.sel = null; view.selLabel = '';
-      markActive(null); renderPanel();
-    });
-    document.getElementById('iv-every').addEventListener('click', function () {
-      view.sel = Q.map(function (q) { return q.id; });
-      view.selLabel = '전체 질문';
-      markActive(null); renderPanel();
-    });
-    document.getElementById('iv-rest').addEventListener('click', function () {
-      view.sel = Q.filter(function (q) { return q.tier === 10 && !answered(q.id); }).map(function (q) { return q.id; });
-      view.selLabel = '아직 답이 없는 10분 질문';
-      markActive(null); renderPanel();
-    });
+    document.getElementById('iv-all').addEventListener('click', function () { showTab('screen'); });
+    document.getElementById('iv-common').addEventListener('click', function () { showTab('common'); });
+    document.getElementById('iv-every').addEventListener('click', function () { showTab('every'); });
+    document.getElementById('iv-rest').addEventListener('click', function () { showTab('rest'); });
   }
 
   function currentRoute() {
@@ -193,6 +196,35 @@
     return ids;
   }
 
+  /* 탭 전환 — 화면에서 고른 영역은 풀고 그 탭의 질문을 패널에 건다. */
+  function showTab(tab) {
+    view.tab = tab;
+    if (tab === 'screen') {
+      view.sel = null; view.selLabel = '';
+    } else if (tab === 'common') {
+      view.sel = COMMON.slice();
+      view.selLabel = '공통 질문';
+    } else if (tab === 'every') {
+      view.sel = Q.map(function (q) { return q.id; });
+      view.selLabel = '전체 질문';
+    } else if (tab === 'rest') {
+      view.sel = Q.filter(function (q) { return q.tier === 10 && !answered(q.id); }).map(function (q) { return q.id; });
+      view.selLabel = '아직 답이 없는 10분 질문';
+    }
+    markActive(null);
+    renderPanel();
+    var body = document.getElementById('iv-p-body');
+    if (body) { body.scrollTop = 0; }
+  }
+
+  function refreshTabs() {
+    var map = { screen: 'iv-all', common: 'iv-common', every: 'iv-every', rest: 'iv-rest' };
+    Object.keys(map).forEach(function (t) {
+      var b = document.getElementById(map[t]);
+      if (b) { b.classList.toggle('on', view.tab === t); }
+    });
+  }
+
   function renderPanel() {
     var body = document.getElementById('iv-p-body');
     var title = document.getElementById('iv-p-title');
@@ -203,9 +235,12 @@
     var list = ids.map(function (id) { return byId[id]; })
                   .filter(function (q) { return q && q.tier <= view.tier; });
 
+    refreshTabs();
     title.textContent = view.selLabel || (view.sel ? '선택한 영역' : '이 화면의 질문');
     var n = list.filter(function (q) { return answered(q.id); }).length;
-    sub.textContent = list.length ? (list.length + '문항 · ' + n + '개 기록' + (view.sel ? '' : ' · 화면의 보라색 영역을 눌러 좁히기')) : '';
+    var hint = view.tab === 'common' ? ' · 화면과 상관없이 묻는 질문'
+             : view.sel ? '' : ' · 화면의 보라색 영역을 눌러 좁히기';
+    sub.textContent = list.length ? (list.length + '문항 · ' + n + '개 기록' + hint) : '';
 
     body.innerHTML = '';
     if (!list.length) {
@@ -322,6 +357,7 @@
     if (!hot) { return; }
     e.preventDefault();
     e.stopPropagation();
+    view.tab = 'screen';
     view.sel = (hot.getAttribute('data-iv-qs') || '').split(',');
     view.selLabel = hot.getAttribute('data-iv-label') || '';
     markActive(hot);

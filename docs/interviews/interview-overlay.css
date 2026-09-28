@@ -132,7 +132,7 @@ body:not(.iv-panel-open) #iv-panel { display: none; }
 #iv-panel .head b { font-size: 13px; }
 #iv-panel .head .sub { color: var(--muted); font-size: 12px; }
 #iv-panel .body { flex: 1; overflow-y: auto; padding: 10px 12px 40px; }
-#iv-panel .foot { padding: 8px 12px; border-top: 1px solid var(--line); display: flex; gap: 6px; }
+#iv-panel .foot { padding: 8px 12px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px; }
 
 .iv-empty { color: var(--muted); padding: 30px 6px; text-align: center; line-height: 1.8; }
 .iv-empty kbd {
