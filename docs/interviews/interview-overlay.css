@@ -142,6 +142,18 @@ body:not(.iv-panel-open) #iv-panel { display: none; }
 
 .iv-q { border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-bottom: 8px; background: var(--bg); }
 .iv-q.done { border-color: var(--iv-done); }
+
+/* 접힌 카드 — 이미 받아 적은 질문. 같은 질문이 다른 화면에도 걸려 있어 다시 만난다. */
+.iv-q.fold { padding: 7px 10px; background: transparent; border-style: dashed; }
+.iv-q.fold .tags, .iv-q.fold .qt { cursor: pointer; }
+.iv-q.fold .qt { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .65; }
+.iv-q.fold .why, .iv-q.fold textarea { display: none; }
+.iv-q .iv-seen { display: none; }
+.iv-q.fold .iv-seen {
+  display: block; margin-top: 3px; font-size: 11px; line-height: 1.5;
+  color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.iv-tag.seen { background: var(--iv-done); border-color: var(--iv-done); color: #fff; }
 .iv-q .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 5px; align-items: center; }
 .iv-tag {
   font-size: 10px; font-weight: 700; letter-spacing: .02em;

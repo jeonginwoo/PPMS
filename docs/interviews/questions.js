@@ -298,12 +298,11 @@
      all = true 면 매칭되는 요소 전부, 없으면 첫 번째만
      =========================================================== */
   var HOTSPOTS = {
-    '*': [
-      { sel: '.head h1', label: '이 화면 전체', qs: ['3-S1', '3-S4'] }
-    ],
-
+    /* '*'(모든 화면) 핫스팟은 두지 않는다 — 화면 제목에 같은 카드가 12번 뜨는데
+       답변은 질문 id 로 하나만 저장되므로, 반복해 보일 뿐 따로 받아 적지 못한다.
+       화면을 가리지 않는 질문(3-S1 · 3-S4)은 패널의 '공통' 탭에서 한 번 묻는다. */
     sales: [
-      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-B7', '3-S4'] },
+      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-B7'] },
       { sel: 'thead th:nth-child(1)', label: '고객사 열', qs: ['4-A1', '4-A3'] },
       { sel: 'thead th:nth-child(2)', label: '프로젝트명 열', qs: ['4-A2', '4-A5'] },
       { sel: 'thead th:nth-child(3)', label: '단계 열', qs: ['4-B1', '4-B2'] },
@@ -317,7 +316,7 @@
     ],
 
     solution: [
-      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-C7', '3-S4'] },
+      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-C7'] },
       { sel: 'thead th:nth-child(3)', label: '상태 열', qs: ['4-C2', '5-B6', '6-A1'] },
       { sel: 'thead th:nth-child(4)', label: '계약 M/M 열', qs: ['4-C3'] },
       { sel: 'thead th:nth-child(5)', label: '기간 열', qs: ['4-C4'] },
@@ -331,7 +330,7 @@
     ],
 
     maintenance: [
-      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-D8', '3-S4'] },
+      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['4-D8'] },
       { sel: 'thead th:nth-child(1)', label: '계약사 열', qs: ['4-A1', '4-D5'] },
       { sel: 'thead th:nth-child(3)', label: '상태 열', qs: ['4-D1'] },
       { sel: 'thead th:nth-child(4)', label: '기간 열', qs: ['4-D1', '4-D3', '4-D4'] },
@@ -344,7 +343,7 @@
     ],
 
     'solution-issues': [
-      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['6-C6', '3-S4'] },
+      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['6-C6'] },
       { sel: 'thead th:nth-child(1)', label: '구분(유형) 열', qs: ['6-C2'] },
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },
       { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4'] },
@@ -354,7 +353,7 @@
     ],
 
     'maintenance-issues': [
-      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['6-C6', '3-S4'] },
+      { sel: 'thead th:last-child', label: '목록 열 구성', qs: ['6-C6'] },
       { sel: 'thead th:nth-child(1)', label: '구분(유형) 열', qs: ['6-C2'] },
       { sel: 'thead th:nth-child(3)', label: '사이트 열', qs: ['4-D2'] },
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },

@@ -34,7 +34,7 @@
   }
   function blank(name) {
     return { name: name, who: 'all', date: new Date().toISOString().slice(0, 10),
-             answers: {}, asked: {}, mins: 0, updatedAt: 0, exportedAt: 0 };
+             answers: {}, asked: {}, where: {}, mins: 0, updatedAt: 0, exportedAt: 0 };
   }
   /* 내보낸 뒤에 고친 답변이 있는 세션 — 창을 닫기 전에 경고할 근거.
      이 페이지는 file:// 이라 스스로 파일을 쓰지 못한다: 내보내기가 유일한 출구다. */
@@ -225,6 +225,14 @@
     });
   }
 
+  /* 지금 답을 받아 적고 있는 자리의 이름. 화면 제목 + 핫스팟 라벨. */
+  function hereLabel() {
+    var h1 = document.querySelector('#main .head h1');
+    var screen = h1 ? h1.textContent.trim() : '';
+    var spot = view.tab === 'common' ? '공통' : (view.selLabel || '');
+    return [screen, spot].filter(Boolean).join(' · ') || '이 화면';
+  }
+
   function renderPanel() {
     var body = document.getElementById('iv-p-body');
     var title = document.getElementById('iv-p-title');
@@ -264,15 +272,28 @@
 
   function card(q) {
     var s = cur();
+    var done = answered(q.id);
     var el = document.createElement('div');
-    el.className = 'iv-q' + (answered(q.id) ? ' done' : '');
+    /* 같은 질문이 여러 화면에 걸려 있다. 이미 받아 적은 것은 접어 두어야
+       다시 만났을 때 안 물어본 질문과 구별된다. 그릴 때만 접고, 입력 중에는 건드리지 않는다. */
+    el.className = 'iv-q' + (done ? ' done fold' : '');
 
     var tags = '<span class="iv-tag id">' + q.id + '</span>' +
-               '<span class="iv-tag' + (q.tier === 10 ? ' t10' : '') + '">' + q.tier + '분</span>';
+               '<span class="iv-tag' + (q.tier === 10 ? ' t10' : '') + '">' + q.tier + '분</span>' +
+               (done ? '<span class="iv-tag seen">기록함</span>' : '');
 
     el.innerHTML = '<div class="tags">' + tags + '</div><div class="qt"></div>' +
-      (q.why ? '<div class="why">' + q.why + '</div>' : '');
+      (q.why ? '<div class="why">' + q.why + '</div>' : '') +
+      '<div class="iv-seen"></div>';
     el.querySelector('.qt').textContent = q.q;
+    if (done) {
+      var at = s.where && s.where[q.id];
+      el.querySelector('.iv-seen').textContent =
+        (at ? at + ' 에서 물음 — ' : '') + (s.answers[q.id] || '').replace(/s+/g, ' ').slice(0, 70);
+    }
+    /* 접힌 카드는 눌러서 편다 — 답을 고칠 수 있어야 한다 */
+    el.querySelector('.tags').addEventListener('click', function () { el.classList.toggle('fold'); });
+    el.querySelector('.qt').addEventListener('click', function () { el.classList.toggle('fold'); });
 
     var ta = document.createElement('textarea');
     ta.placeholder = '답변 받아 적기…';
@@ -281,6 +302,8 @@
     ta.addEventListener('input', function () {
       s.answers[q.id] = ta.value;
       s.asked[q.id] = true;
+      s.where = s.where || {};
+      if (ta.value.trim() && !s.where[q.id]) { s.where[q.id] = hereLabel(); }
       s.updatedAt = Date.now();
       el.classList.toggle('done', !!ta.value.trim());
       grow(ta); save(); refreshBadges();
