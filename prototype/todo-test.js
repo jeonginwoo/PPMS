@@ -154,6 +154,19 @@ is('주간 조회도 사람을 가리지 않는다',
 var nd104 = D.createTodo({ personId: '2', title: '날짜 없는 104', projectId: '104' });
 is('날짜 없는 것은 주간 캘린더에 안 뜬다', D.todosOfProjectBetween(104, pw, D.shiftDay(pw, 4)).indexOf(nd104) >= 0, false);
 
+// 10. 완료 토글 — 카드의 완료 버튼이 부르는 길(ACT.toggleTodoDone)이 쓰는 규칙.
+//     여러 날에 놓인 할 일은 상태가 하나이므로 모든 날에서 함께 바뀐다. 이것이 F2 의 미결이다.
+var tg = D.createTodo({ personId: '3', date: T1, title: '완료 토글 대상' });
+tg.dates.push(T0);
+is('가져온 할 일은 두 날에 놓인다', tg.dates.length, 2);
+is('완료 전 — 어제 칸', D.todosOf(3, T1).indexOf(tg) >= 0, true);
+D.setTodoStatus(tg.id, '완료');
+is('완료로 바뀐다', tg.status, '완료');
+is('오늘 완료하면 어제 칸의 같은 카드도 완료다 (상태가 하나 · F2 미결)',
+   D.todosOf(3, T1).filter(function (x) { return x.id === tg.id; })[0].status, '완료');
+is('되돌리면 진행 — 완료 직전 상태는 남기지 않는다', D.setTodoStatus(tg.id, '진행').status, '진행');
+is('토글은 날짜를 건드리지 않는다', tg.dates.length, 2);
+
 // 10. 삭제
 is('삭제', D.deleteTodo(t.id), true);
 is('삭제 후 조회 불가', D.byId(D.todos, t.id), null);

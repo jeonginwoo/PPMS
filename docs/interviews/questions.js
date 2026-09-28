@@ -256,6 +256,9 @@
       why:'권한(F5)과 이어진다. 지금 TODO는 내 것만, 업무보고는 전원이 보인다.' },
     { s:'s6f', id:'6-F9', tier:30, who:['common'],
       q:'비고 말고도 보고 표에 함께 넣어야 할 항목이 있나요?' },
+    { s:'s6f', id:'6-F11', tier:20, who:['common'],
+      q:'TODO 카드의 체크 버튼으로 완료를 바로 찍게 했습니다. 이 방식이 편할까요? 완료 말고도 카드에서 바로 바꾸고 싶은 것이 있나요?',
+      why:'지금은 카드를 눌러 수정 창을 열어야 상태를 바꿀 수 있었다. 체크 하나로 끝나는 길을 넣고 쓰임새를 확인한다.' },
     { s:'s6f', id:'6-F10', tier:30, who:['common'],
       q:'보고서를 부서별로 걸러서 볼 수 있는 기능을 넣는 게 좋을까요?',
       why:'지금은 부서 구분 없이 전원이 한 표에 나온다.' },
@@ -364,6 +367,7 @@
 
     'my-todos': [
       { sel: '.head .btn.primary', label: '＋ TODO', qs: ['3-S9', '6-F6'] },
+      { sel: '.tcard .tdone', label: '완료 버튼', qs: ['6-F11', '6-F3'] },
       { sel: '.planbox', label: '주간 계획 칸', qs: ['6-F3'], all: true },
       { sel: '.dh .tag.maint', label: '휴가 표시', qs: ['6-F7'], all: true },
       { sel: '.strip', label: '날짜 없음 · 주말 줄', qs: ['6-F6'], all: true },
