@@ -200,8 +200,6 @@
       why:'기존 버전에서는 ‘고객 확인 대기 → 처리 중’ 변경이 막혀 있어 완료 후 재개해야 한다. 실제 대응에 필요한 상태 변경인지 확인한다.' },
     { s:'s6c', id:'6-C2', tier:30, who:['cs'],
       q:'이슈 상태를 ‘접수 → 처리 중 → 고객 확인 대기 → 완료’로 구분하면 실제 업무에 맞을까요? 전화 한 통으로 해결한 문의도 각 단계를 거쳐 기록해야 할까요? 이슈 유형은 장애, 문의, 요청 외에 더 필요한 것이 있나요?' },
-    { s:'s6c', id:'6-C3', tier:30, who:['cs'],
-      q:'이슈를 잘못 등록했을 때 내용을 수정하는 기능과 삭제하는 기능이 각각 필요할까요? 등록자와 담당자 중 누구에게 허용하면 좋을까요?' },
     { s:'s6c', id:'6-C4', tier:30, who:['cs'],
       q:'이슈를 등록하면 해당 사이트의 담당 엔지니어에게 자동 배정되는 방식은 어떠세요? 담당자가 바뀌었을 때 알림도 필요한가요?' },
     { s:'s6c', id:'6-C6', tier:30, who:['solution','cs'],
@@ -333,8 +331,7 @@
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },
       { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4'] },
       { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7'] },
-      { sel: 'button[onclick^="ACT.delIssue"]', label: '삭제 버튼', qs: ['6-C3'] },
-      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C2', '6-C3'] }
+      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C2'] }
     ],
 
     'maintenance-issues': [
@@ -344,8 +341,7 @@
       { sel: 'thead th:nth-child(4)', label: '상태 열', qs: ['6-C1', '6-C2'] },
       { sel: 'thead th:nth-child(5)', label: '담당자 열', qs: ['6-C4'] },
       { sel: 'button[onclick^="ACT.newIssue"]', label: '＋ 이슈 생성', qs: ['3-S7'] },
-      { sel: 'button[onclick^="ACT.delIssue"]', label: '삭제 버튼', qs: ['6-C3'] },
-      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C3'] }
+      { sel: '.note.q', label: '이 화면의 미확정 사항', qs: ['6-C1'] }
     ],
 
     project: [
@@ -389,7 +385,7 @@
     ],
 
     logs: [
-      { sel: '.head h1', label: '로그 (미구현)', qs: ['6-A7', '6-C3'] }
+      { sel: '.head h1', label: '로그 (미구현)', qs: ['6-A7'] }
     ]
   };
 
