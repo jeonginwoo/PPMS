@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMS v4 프로토타입 v2</title>
+<link rel="stylesheet" href="assets/base.css?v=3">
+<link rel="stylesheet" href="assets/v2.css?v=3">
+</head>
+<body>
+<div class="main" style="max-width:880px;margin:0 auto">
+
+  <h1>PMS v4 — 프로토타입 <strong>v2</strong></h1>
+  <p class="lead">2026-09-27 ~ 09-30 인터뷰(영업 · 솔루션 · CS)를 화면으로 옮긴 것입니다.
+  버릴 물건입니다. 빌드도 서버도 없고, <strong>더블클릭으로 열립니다.</strong></p>
+
+  <div class="note">
+    <strong><a href="pms.html">→ 프로토타입 v2 열기</a></strong><br>
+    v1(<code>prototype/</code>)은 건드리지 않았습니다. 여기 있는 <code>data.js</code>·<code>views.js</code>는
+    v1 복사본 그대로이고, <code>data-v2.js</code>·<code>views-v2.js</code>·<code>v2.css</code>가 그 위에 덮어씁니다 —
+    <strong>인터뷰 때문에 생긴 것이 어느 것인지</strong>가 파일 경계로 드러나게 했습니다.
+  </div>
+
+  <h2>인터뷰가 바꾼 것</h2>
+  <table>
+    <thead><tr><th style="width:120px">영역</th><th>바뀐 것</th><th style="width:150px">근거</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag sales">영업</span></td>
+          <td><strong>단계를 내비 하위 항목으로</strong>(리드 · 제안 · 견적 · 수주 · 실주) ·
+              <a href="pms.html#/sales">목록</a>에 <strong>검색 · 필터 · 열 선택</strong> ·
+              고객사/발주처 분리 · 제품·수량(core·copy) · 최종 컨택일 · M/M 초·중·고 ·
+              값을 눌러 바로 거르기<br>
+              <a href="pms.html#/deal/101">영업 건 상세</a> — 첨부문서 · 고객 연락처 · 진행사항 로그 ·
+              <strong>금액 변동 이력</strong> · 선금/중도금/잔금/검수확인</td>
+          <td>3-S1 · 4-A1 · 4-B7 · 4-C7 · 추가 메모</td></tr>
+      <tr><td><span class="tag solution">솔루션</span></td>
+          <td><a href="pms.html#/solution">목록</a>에 <strong>개발 기간</strong>을 계약 기간과 따로 ·
+              실투입 M/M 초과 시 붉게<br>
+              <a href="pms.html#/sol/104">상세</a> — <strong>진행률이 태스크의 가중 평균</strong>(직접 쓰는 값이 아님) ·
+              custom 태스크 · 수주 전에는 인력 배정 잠금 · 프로필 보기</td>
+          <td>2-D · 4-C3 · 4-C4 · 추가 메모</td></tr>
+      <tr><td><span class="tag maint">유지보수</span></td>
+          <td><a href="pms.html#/mprojects">프로젝트</a> — <strong>새 화면.</strong> 이관 화면을 솔루션에서 이리로 옮겼습니다.
+              <strong>완료 / 대기</strong> 두 탭이고, 완료 탭이 곧 <strong>계약과 무관하게 프로젝트를 훑는 목록</strong>입니다.
+              <a href="pms.html#/mproject/107">프로젝트 히스토리</a>에 이관 타임라인 · 인수인계 내용 ·
+              연결된 계약과 사이트 · 이 프로젝트의 이슈(구축 때 것 + 넘어간 뒤 것)가 한 곳에 있습니다.
+              대기 탭에서는 필수 항목(패키지·톰캣·SSL·변경 모듈·체크리스트)을 못 채우면 <strong>이관이 막힙니다</strong><br>
+              <a href="pms.html#/maintenance">계약</a>에 <strong>신규/유지</strong> 구분 · 정기점검 주기·방식 ·
+              고객대표 · 만료까지 남은 기간<br>
+              <a href="pms.html#/checks">정기점검</a> — <strong>새 화면.</strong> 월 달력에 점검 · 갱신 · 만료 · 외근 ·
+              완료 표시 · 점검 문서<br>
+              <a href="pms.html#/maintenance-issues">이슈</a> — 담당자 기준 · 고객 담당자 · 완료일 ·
+              난이도 · 별점 · <strong>완료 건 되살리기</strong><br>
+              <a href="pms.html#/issue/603">이슈 상세</a> — <strong>새 페이지</strong>로 이동 ·
+              템플릿(문의 내용 / 원인 파악 / 작업 내용) · 코드 · 이미지 · 메일 알림</td>
+          <td>4-D8 · 6-C2 · 6-C4 · 6-C6 · 3-S7</td></tr>
+      <tr><td><span class="tag off">회계</span></td>
+          <td><a href="pms.html#/finance">매출 · 매입</a> · <a href="pms.html#/payments">수금 일정</a> —
+              <strong>둘 다 숫자가 목업입니다.</strong> 계산 원리는 부사장님 인터뷰 전이라 근거가 없습니다</td>
+          <td>추가 메모</td></tr>
+      <tr><td><span class="tag off">개인</span></td>
+          <td><a href="pms.html#/my-month">TODO 월 보기</a> 추가 · 주간 보기는 v1 그대로</td>
+          <td>추가 메모</td></tr>
+    </tbody>
+  </table>
+
+  <h2>뺀 것</h2>
+  <p class="lead">
+    <strong>업무보고</strong>를 내비에서 뺐습니다 — 추가 메모의
+    <em>“업무보고 탭 보류(개인 페이지로 만들어서) 복붙”</em>, <em>“일일보고는 어려울 수도 → 최대한 간편화”</em>에
+    따른 사용자 결정(2026-09-30). v1의 업무보고 화면은 <code>prototype/</code>과
+    <code>prototype/snapshots/002-b0-todo-report</code>에 그대로 있습니다.<br>
+    <strong>긴급도</strong>는 넣지 않았습니다 — <em>“긴급도는 애매(케이스바이케이스)”</em>.
+  </p>
+
+  <h2>이 프로토타입이 <em>정하지 않은</em> 것</h2>
+  <p class="lead">
+    <strong>이슈가 무엇에 붙는가</strong> — 유지보수 이슈는 <strong>사이트</strong>에 붙는 현 상태를 유지했습니다(사용자 결정).
+    솔루션과 추가 메모는 “프로젝트 기준”을 들었고, 추가 메모에는 <em>“지금 1:N → 1:1로 수정 예정”</em>이라는 줄도 있습니다.
+    무엇의 1:N인지 원문에 없어 화면으로 정하지 않았습니다 —
+    <a href="../docs/interviews/2026-09-30-인터뷰-정리.md">인터뷰 정리</a> §5 · §6.<br>
+    각 화면 아래 <strong>“확인할 것”</strong> 상자가 그 화면이 답하지 못한 질문입니다.
+  </p>
+
+  <div class="note q">
+    <strong>이 폴더는 git에 올리지 않습니다.</strong> 요청하실 때만 푸시합니다.
+  </div>
+
+</div>
+</body>
+</html>

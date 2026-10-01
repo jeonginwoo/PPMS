@@ -1,0 +1,94 @@
+/* v2.css — 인터뷰 반영으로 새로 생긴 조각들.
+   base.css 는 v1 그대로 두고 여기서만 더한다. */
+
+/* 내비 — 영업 단계 하위 항목 */
+.side a.item.sub { padding-left: 40px; font-size: 12px; color: var(--muted); }
+.side a.item.sub.on { padding-left: 37px; color: var(--fg); }
+.side .group .todo { font-size: 10px; border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; margin-left: 4px; font-weight: 400; }
+
+/* 검색 · 필터 막대 */
+.filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 10px 0 6px; }
+.filters input.search {
+  flex: 1 1 260px; min-width: 200px; padding: 5px 9px; font: inherit; font-size: 13px;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--fg);
+}
+.filters select {
+  padding: 5px 7px; font: inherit; font-size: 12px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--panel); color: var(--fg);
+}
+.filters .spacer { flex: 1; }
+
+/* 값을 눌러 바로 거르는 칩 — "한국거래소 클릭했을 때 딱 필터링" */
+.chip { border-bottom: 1px dotted var(--line); cursor: pointer; }
+.chip:hover { border-bottom-color: var(--accent); text-decoration: none; }
+
+/* 열 선택 모달의 체크박스 목록 */
+label.chk { display: flex; align-items: center; gap: 7px; font-size: 13px; padding: 3px 0; cursor: pointer; }
+
+/* 금액 · 수치 강조 */
+.big { font-size: 22px; font-weight: 700; }
+.muted { color: var(--muted); font-weight: 400; font-size: 12px; }
+.over { color: var(--warn); font-weight: 700; }
+.bar.over > i { background: var(--warn); }
+
+/* 태스크 목록 (솔루션 진행률) */
+table.tasks th, table.tasks td { padding: 4px 8px; font-size: 13px; }
+table.tasks .bar { min-width: 120px; }
+
+/* 별점 */
+.stars { color: var(--warn); letter-spacing: 1px; white-space: nowrap; }
+.stars .off { color: var(--line); }
+
+/* 이슈 본문 — 코드와 이미지가 들어간다 */
+.issuebody {
+  white-space: pre-wrap; font-size: 13px; line-height: 1.7;
+  background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px;
+}
+.issuebody code, code.inline {
+  font-family: ui-monospace, Consolas, monospace; font-size: 12px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px;
+}
+.imgstub {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 160px; height: 96px; border: 1px dashed var(--line); border-radius: 6px;
+  color: var(--muted); font-size: 12px; background: var(--bg); margin: 6px 6px 0 0;
+}
+
+/* 월별 캘린더 (TODO 월 보기 · 유지보수 달력) */
+.month { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); }
+.month .mh { background: var(--soft); font-size: 12px; color: var(--muted); font-weight: 600; padding: 6px 8px; text-align: center; border-left: 1px solid var(--line); }
+.month .mh:first-child { border-left: 0; }
+.month .mc { min-height: 92px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); padding: 4px 6px 6px; }
+.month .mc:nth-child(7n + 1) { border-left: 0; }
+.month .mc.out { background: var(--soft); opacity: .55; }
+.month .mc.today .dnum { background: var(--warn); color: var(--bg); border-radius: 999px; padding: 0 6px; }
+.month .dnum { font-size: 12px; font-weight: 700; color: var(--muted); }
+.month .mc.wknd .dnum { color: var(--warn); }
+.month .ev { font-size: 11px; border-radius: 4px; padding: 1px 5px; margin-top: 3px; border: 1px solid currentColor; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.month .ev.check { color: var(--maint); }
+.month .ev.renew { color: var(--warn); }
+.month .ev.trip { color: var(--solution); }
+.month .ev.todo { color: var(--accent); }
+.month .ev.done { color: var(--muted); text-decoration: line-through; }
+
+/* 두 칸 배치 */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+@media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+
+/* 이관 필수 입력 — 못 채우면 막는다 */
+.gate { border: 1px solid var(--warn); border-radius: 8px; padding: 10px 12px; margin: 8px 0; font-size: 13px; }
+.gate b { color: var(--warn); }
+.gate ul { margin: 6px 0 0; padding-left: 18px; }
+
+/* 통계 타일 */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 10px 0; }
+.tile { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--panel); }
+.tile .t { font-size: 12px; color: var(--muted); }
+.tile .v { font-size: 19px; font-weight: 700; margin-top: 3px; }
+
+/* 가로 막대 차트 — 값 하나짜리 비교용 */
+.hbar { display: grid; grid-template-columns: 110px 1fr 90px; gap: 8px; align-items: center; font-size: 13px; margin: 4px 0; }
+.hbar .track { height: 14px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.hbar .track > i { display: block; height: 100%; background: var(--accent); }
+.hbar .track > i.buy { background: var(--warn); }
+.hbar .n { text-align: right; white-space: nowrap; color: var(--muted); }
