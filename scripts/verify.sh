@@ -196,10 +196,17 @@ check_diff_budget() {
   # prototype/ is exempt because it is throwaway, but it is still REPORTED: the
   # number is the cycle-width signal, and excluding it silently would delete the
   # very thing the budget exists to make visible (review finding, 2026-09-19).
+  #
+  # The glob covers sibling prototype dirs (prototype-v2/ …), not just prototype/.
+  # A rebuilt prototype is as throwaway as the first one, but sitting outside
+  # prototype/ it was counted as product code — 4,553 lines of material nobody
+  # will maintain, charged against a 400-line budget. That number is not wrong,
+  # it is MEANINGLESS: it drowns the signal the budget exists to give. The lines
+  # are still reported on the prototype row (2026-10-01 decision).
   git rev-parse HEAD >/dev/null 2>&1 || { echo "no commits yet — skipped"; return 0; }
   local code proto
-  code=$(changed_lines . ':(exclude)docs' ':(exclude)prototype' ':(exclude)build')
-  proto=$(changed_lines prototype ':(exclude)prototype/snapshots')
+  code=$(changed_lines . ':(exclude)docs' ':(exclude)prototype*' ':(exclude)build')
+  proto=$(changed_lines 'prototype*' ':(exclude)prototype*/snapshots')
   echo "product code : $code / $BUDGET"
   echo "prototype    : $proto (budget-exempt, but this is the cycle-width signal — read it)"
   [ "$code" -le "$BUDGET" ]

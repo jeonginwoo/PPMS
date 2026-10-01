@@ -35,8 +35,9 @@ one**: requirements live in the unit specs, features in the ROADMAP.
 3. The spec is `docs/features/<NN-slug>.md` and stays **one page**. There is no
    global PRD in this repo — writing one is the mistake this repo exists to avoid.
 4. Implementation never starts without an approved spec file for that unit.
-5. **Diff budget: 400 lines per cycle**, counting product code only — `docs/`,
-   `prototype/` and `prototype/snapshots/` are excluded. Over budget means the unit
+5. **Diff budget: 400 lines per cycle**, counting product code only — `docs/` and
+   every `prototype*/` directory are excluded (`prototype/`, `prototype-v2/`, …).
+   Their lines are still **reported** on the prototype row. Over budget means the unit
    was cut too big; split it and say so. Never ask for permission to exceed it.
 6. A prototype may cover several units at once (see B0) — walking the whole transfer
    pipeline is how it gets validated, and it is throwaway. **Specs and implementation
@@ -64,8 +65,10 @@ bash scripts/proto-snapshot.sh <label>  # freeze prototype/ into prototype/snaps
 
 ## Structure rules (invariants — never write code that violates them)
 
-1. `prototype/` is throwaway planning material, not product code. No build step,
-   no npm dependency, no framework. Mock data inline or in `prototype/assets/*.js`.
+1. `prototype*/` is throwaway planning material, not product code. No build step,
+   no npm dependency, no framework. Mock data inline or in `<dir>/assets/*.js`.
+   A rebuilt prototype gets a sibling directory (`prototype-v2/`) — the earlier one
+   is left untouched, so what each round decided stays readable side by side.
 2. `prototype/snapshots/` is **append-only** — a frozen stage is never edited and
    never deleted, only added to. Write there through `scripts/proto-snapshot.sh` only.
 3. `docs/BACKBONE.md` changes only together with a PROGRESS decision-log entry.
