@@ -133,7 +133,17 @@ label.pick .when { color: var(--muted); font-size: 11px; }
 .chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 0 4px; }
 .chip { font: inherit; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
 .chip:hover { border-color: var(--warn); color: var(--warn); }
-.tcard .tt { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.tcard .th { display: flex; align-items: flex-start; gap: 6px; }
+.tcard .tt { font-size: 13px; font-weight: 600; line-height: 1.35; flex: 1; min-width: 0; }
+.tcard.done .tt { color: var(--muted); text-decoration: line-through; }
+/* 완료 버튼 — 카드를 열지 않고 체크만으로 끝낸다 */
+.tcard .tdone {
+  flex: 0 0 16px; width: 16px; height: 16px; margin-top: 1px; padding: 0;
+  border: 1px solid var(--muted); border-radius: 4px; background: var(--panel);
+  color: transparent; font-size: 11px; line-height: 1; cursor: pointer;
+}
+.tcard .tdone:hover { border-color: var(--ok); color: var(--muted); }
+.tcard .tdone.on { background: var(--ok); border-color: var(--ok); color: #fff; }
 .tcard .tp { display: flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 11px; color: var(--muted); }
 .tcard .dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 2px; }
 .tcard .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
